@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quem Somos | Imobiliária em Recife</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-body-tertiary">
+
+    <!-- WRAPPER CENTRAL (800px - 1000px) -->
+    <div class="page-wrapper bg-white shadow-lg mx-auto">
+
+        <!-- HEADER DA PÁGINA INTERNA -->
+        <header class="inner-header-bg py-3">
+            <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+                <a href="index.html">
+                    <img src="assets/logo_av.png" alt="Logo Corretor" style="max-height: 80px;"
+                        onerror="this.src='https://ui-avatars.com/api/?name=Sua+Imobiliaria&background=random&size=150'">
+                </a>
+                <a href="index.html" class="btn btn-outline-light btn-sm fw-bold"><i class="fa fa-arrow-left me-2"></i>
+                    Início</a>
+            </div>
+        </header>
+
+        <nav class="navbar navbar-expand-lg bg-white sticky-top shadow-sm border-bottom py-3">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand text-dark home-icon-brand" href="index.html" title="Página Inicial">
+                    <i class="fa fa-home fs-4"></i>
+                </a>
+                <button class="navbar-toggler border-0 focus-ring focus-ring-light" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainMenu">
+                    <ul class="navbar-nav mx-auto fw-bold fs-6 text-center mt-3 mt-lg-0 text-uppercase"
+                        style="letter-spacing: 0.5px;">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark mx-3 hover-primary transition" href="index.html">Início</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark mx-3 hover-primary transition" href="quem-somos.html">Quem
+                                Somos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark mx-3 hover-primary transition"
+                                href="index.html#localizacao">Localização</a>
+                        </li>
+                    </ul>
+                    <div class="d-none d-lg-block" style="width: 50px;"></div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="py-5 bg-white" style="min-height: calc(100vh - 200px);">
+            <div class="container px-4">
+                <div class="row align-items-center mb-5 g-5">
+                    <div class="col-md-5 mb-4 mb-md-0 fade-in text-center">
+                        <img src="assets/alex.png" alt="Corretor de imóveis" class="img-fluid rounded shadow-sm w-100"
+                            style="max-width: 350px;"
+                            onerror="this.src='https://ui-avatars.com/api/?name=Alex+Corretor&background=random&size=400'">
+                    </div>
+                    <div class="col-md-7 fade-in">
+                        <h1 class="display-5 fw-bold text-dark mb-4 position-relative">
+                            Quem Somos
+                            <span class="position-absolute bottom-0 start-0 w-25 bg-primary"
+                                style="height: 4px; border-radius: 2px;"></span>
+                        </h1>
+                        <p class="fs-5 text-secondary mb-4 mt-3 lh-lg">
+                            Com anos de experiência no mercado imobiliário de Recife e região, nossa equipe,
+                            liderada por Alex, dedica-se a encontrar as melhores oportunidades de moradia e
+                            investimentos para nossos clientes.
+                        </p>
+                        <p class="fs-5 text-secondary lh-lg">
+                            Acreditamos em atendimento personalizado, ética, transparência e em proporcionar
+                            a melhor experiência na compra ou venda do seu imóvel.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================================
+                 LOCALIZAÇÃO
+            ================================================ -->
+            <section class="section location-section bg-light py-5" id="localizacao">
+                <div class="container px-4">
+                    <h2 class="section-title fade-in text-center mb-5 fw-bold">Nossa Localização</h2>
+                    <div class="row g-4 fade-in">
+                        <!-- Info do endereço -->
+                        <div class="col-lg-5">
+                            <div class="address-card p-4 bg-white rounded shadow-sm d-flex gap-3 h-100">
+                                <div class="address-icon text-primary fs-2 mt-1">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="address-details pt-2">
+                                    <h3 class="fs-4 fw-bold text-dark">Endereço</h3>
+                                    <p class="mb-1 text-secondary">Avenida Boa Viagem, 1234</p>
+                                    <p class="mb-1 text-secondary">Empresarial Top</p>
+                                    <p class="mb-1 text-secondary">Boa Viagem, Recife - PE</p>
+                                    <p class="mb-0 text-secondary">CEP: 51000-000</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Google Maps Embed -->
+                        <div class="col-lg-7">
+                            <div class="map-container rounded overflow-hidden shadow-sm h-100">
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126487.68307675712!2d-35.0069324684947!3d-8.040187834575916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ab196f88c446e5%3A0x3c9ef52922447fd4!2sRecife%2C%20PE!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr"
+                                    width="100%" height="100%" style="border:0; min-height: 250px;" allowfullscreen=""
+                                    loading="lazy">
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4 fade-in">
+                        <a href="https://www.google.com/maps" target="_blank"
+                            class="btn btn-primary py-3 px-5 rounded-pill fw-bold shadow-sm">
+                            <i class="fas fa-external-link-alt me-2"></i> Ver no Google Maps
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- ================================================
+             FOOTER CLIENTE
+        ================================================ -->
+        <footer id="contato" class="main-footer bg-dark text-white pt-5">
+            <div class="container px-4">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4 text-center text-md-start">
+                        <img src="assets/logo_av.png" alt="Logo" class="img-fluid mb-3 bg-white p-2 rounded shadow-sm"
+                            style="max-height: 70px;"
+                            onerror="this.src='https://ui-avatars.com/api/?name=Sua+Imobiliaria&background=random&size=150'">
+                        <p class="text-white-50 small">Sua melhor escolha para imóveis de qualidade em Recife e região
+                            metropolitana.</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h5 class="text-uppercase mb-3 fs-6 letter-spacing-1">Atalhos</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="index.html"
+                                    class="text-white-50 text-decoration-none hover-white transition">Início</a></li>
+                            <li class="mb-2"><a href="#"
+                                    class="text-white-50 text-decoration-none hover-white transition">Quem Somos</a>
+                            </li>
+                            <li class="mb-2"><a href="#localizacao"
+                                    class="text-white-50 text-decoration-none hover-white transition">Localização</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 text-center text-md-end">
+                        <h5 class="text-uppercase mb-3 fs-6 letter-spacing-1">Contato</h5>
+                        <p class="text-white-50 mb-1"><i class="far fa-envelope me-2"></i> contato@imobiliaria.com.br
+                        </p>
+                        <p class="text-white-50"><i class="fab fa-whatsapp me-2"></i> +55 81 98888-8888</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER DESENVOLVEDOR -->
+            <div class="bg-black py-4 text-center text-white-50 small border-top border-secondary">
+                <div class="container">
+                    <p class="mb-1">Desenvolvido por <a href="https://www.patrickataide.com.br" target="_blank"
+                            class="text-white text-decoration-none hover-white">www.patrickataide.com.br</a></p>
+                    <p class="mb-1">Automação e Desenvolvimento Empresarial.</p>
+                    <p class="mb-1">Contato - <a href="https://wa.me/5581989304727" target="_blank"
+                            class="text-white text-decoration-none hover-white">55 81 98930-4727</a></p>
+                    <p class="mb-0 mt-3">&copy; <span id="current-year"></span> Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </footer>
+
+    </div> <!-- FINAL DO PAGE-WRAPPER CENTRALIZADO -->
+
+    <!-- ================================================
+         WIDGET WHATSAPP — Fixo no canto inferior direito
+    ================================================ -->
+    <div id="whatsapp-widget" class="whatsapp-widget">
+        <div id="whatsapp-popup" class="whatsapp-popup">
+            <div class="whatsapp-popup-header" style="background-color: #25D366; color: white;">
+                <p>Olá! Clique aqui e um de nossos representantes entrará em contato com você o mais breve possível.</p>
+                <button id="whatsapp-close"
+                    class="whatsapp-close border-0 bg-transparent text-white fw-bold">&times;</button>
+            </div>
+            <div class="whatsapp-popup-body d-flex align-items-center gap-3 p-3 bg-white" id="whatsapp-body"
+                style="cursor: pointer; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                <div class="whatsapp-logo-container rounded-circle bg-success bg-opacity-10 d-flex justify-content-center align-items-center"
+                    style="width: 50px; height: 50px;">
+                    <i class="fab fa-whatsapp fa-2x text-success"></i>
+                </div>
+                <div class="whatsapp-text">
+                    <span class="whatsapp-brand-small text-muted d-block" style="font-size: 0.8rem;">Alex
+                        Corretor</span>
+                    <span class="whatsapp-brand-bold fw-bold text-dark d-block">Fale conosco !</span>
+                </div>
+            </div>
+        </div>
+
+        <button id="whatsapp-btn"
+            class="whatsapp-btn btn btn-success rounded-pill px-4 py-3 mt-3 shadow-lg fw-bold d-flex align-items-center gap-2"
+            style="background-color: #25D366; border: none;">
+            <i class="fab fa-whatsapp fs-4"></i> Converse via WhatsApp
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

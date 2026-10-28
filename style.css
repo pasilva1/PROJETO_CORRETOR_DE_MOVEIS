@@ -1,0 +1,1323 @@
+/* =====================================================
+   BOOTSTRAP OVERRIDES E CUSTOM CSS PARA IMOBILIÁRIA
+   ===================================================== */
+:root {
+  --primary: #0056b3;
+  /* Azul profissional imobiliário */
+  --primary-dark: #004494;
+  --secondary: #f8f9fa;
+  --text-main: #333333;
+  --text-muted: #6c757d;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: #f0f2f5;
+  /* Cor de fundo externa leve para contraste com as sombras */
+}
+
+/* =====================================================
+   WRAPPER CENTRALIZADO (800px a 1000px)
+   ===================================================== */
+.page-wrapper {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  background-color: #ffffff;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
+  /* Sombra elegante nas laterais */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* O conteúdo principal cresce pra empurrar o footer pra baixo caso página seja curta */
+main {
+  flex: 1;
+}
+
+/* =====================================================
+   MENU E NAVBAR
+   ===================================================== */
+.home-icon-brand {
+  transition: transform 0.3s ease;
+}
+
+.home-icon-brand:hover {
+  transform: scale(1.1);
+}
+
+.hover-white:hover {
+  color: #fff !important;
+}
+
+.transition {
+  transition: all 0.3s ease;
+}
+
+/* =====================================================
+   CARDS DE IMÓVEL (ÁREA DE IMAGEM COM OVERLAY)
+   ===================================================== */
+.property-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  /* Aumentado para exibir o conteúdo na subida melhor */
+  overflow: hidden;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.property-overlay-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 15px;
+  /* Começa escondido/baixo (podendo deixar só uma pontinha ou 100% fora se quiser) */
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+  backdrop-filter: blur(3px);
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.card:hover .property-overlay-info {
+  transform: translateY(0);
+}
+
+.property-image-wrapper>img {
+  transition: transform 0.5s ease;
+}
+
+.card:hover .property-image-wrapper>img {
+  transform: scale(1.05);
+}
+
+.top-header-carousel {
+  position: relative;
+  height: 350px;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+.bg-carousel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.bg-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.bg-slide.active {
+  opacity: 0.6;
+}
+
+.header-content-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  /* Degrade mais forte (branco opaco), sem espaçamentos laterais/verticais na caixa */
+  background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.85) 20%, rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, 0) 55%, rgba(255, 255, 255, 0.85) 80%, rgba(255, 255, 255, 1) 100%);
+}
+
+.logo-header {
+  max-height: 230px;
+  z-index: 10;
+}
+
+.corretor-photo {
+  height: 100%;
+  align-self: flex-end;
+  width: auto;
+  object-fit: cover;
+  object-position: bottom;
+  z-index: 10;
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
+}
+
+/* =====================================================
+   IMÓVEIS CAROUSEL
+   ===================================================== */
+#imoveisCarousel .carousel-item img {
+  height: 400px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+/* =====================================================
+   CLASSES ESPECÍFICAS EXIGIDAS NO PROMPT
+   ===================================================== */
+.c49mod-otimization-index {
+  padding: 4rem 0;
+  border-top: 1px solid #e9ecef;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Estilos de Card Footer */
+.card-footer {
+  background-color: #fff;
+  border-top: 1px solid #f1f1f1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.card-footer>span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.c49icon-area-1,
+.c49icon-bedroom-1,
+.c49icon-garage-1,
+.c49icon-bathroom-1 {
+  font-weight: 600;
+}
+
+.c49-property-number-wrap {
+  width: 100%;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #ddd;
+  text-align: right;
+}
+
+.c49-property-number {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+/* Outros itens importados ou úteis */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.inner-header-bg {
+  background-color: var(--bs-dark);
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 12%, rgba(255, 255, 255, 0) 35%);
+}
+
+/* =====================================================
+   4. ANIMAÇÕES DE SCROLL (Fade-in via IntersectionObserver)
+   ===================================================== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Keyframes reutilizáveis */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-left {
+  animation: slideInLeft 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+/* =====================================================
+   5. HEADER FIXO
+   ===================================================== */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: var(--bg-white);
+  padding: 1rem 0;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.15), inset 0 0 15px rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+}
+
+/* Estado após scroll (comprime o header) */
+header.scrolled {
+  padding: 0.6rem 0;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.07);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img {
+  max-height: 60px;
+  width: auto;
+  transition: var(--transition);
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+}
+
+/* Links de navegação desktop */
+.nav-links {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.nav-item {
+  color: var(--text-main);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.nav-item:hover {
+  color: var(--primary);
+}
+
+/* Botão hamburguer (visível em mobile) */
+.mobile-menu-btn {
+  display: none;
+  font-size: 1.5rem;
+  z-index: 1100;
+  color: var(--text-main);
+}
+
+/* =====================================================
+   6. MENU MOBILE — Painel deslizante
+   ===================================================== */
+.mobile-nav {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80%;
+  height: 100vh;
+  background: var(--bg-white);
+  padding: 5rem 2rem;
+  transition: var(--transition);
+  z-index: 1050;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-nav.active {
+  right: 0;
+}
+
+.mobile-nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* =====================================================
+   7. HERO — Carrossel de fundo
+   ===================================================== */
+.hero {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-container {
+  height: 100%;
+  width: 100%;
+}
+
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  background-size: cover;
+  background-position: center;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+}
+
+/* Overlay escuro sobre as imagens */
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: var(--white);
+  z-index: 10;
+}
+
+.hero-content h1 {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-sm);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.hero-content p {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.9;
+}
+
+/* =====================================================
+   8. SEÇÃO SOBRE — Grid com Flip Card
+   ===================================================== */
+.self-knowledge {
+  background: var(--bg-white);
+  padding: 100px 0;
+}
+
+.self-knowledge-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xl);
+  align-items: center;
+}
+
+.self-knowledge-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Flip Card 3D */
+.flip-card {
+  background-color: transparent;
+  width: 100%;
+  max-width: 450px;
+  height: 550px;
+  perspective: 1500px;
+  cursor: pointer;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+.flip-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.flip-hint {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* =====================================================
+   9. SERVIÇOS — Grade circular
+   ===================================================== */
+.classes-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-md);
+  text-align: center;
+}
+
+.class-item {
+  transition: var(--transition);
+}
+
+.class-item:hover {
+  transform: scale(1.05);
+}
+
+.class-img-container {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  margin: 0 auto var(--spacing-sm);
+  overflow: hidden;
+  border: 2px solid var(--primary-light);
+}
+
+.class-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.class-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* =====================================================
+   10. EQUIPE / PROFESSORES — Cards horizontais com overlap
+   ===================================================== */
+.professors {
+  background-color: var(--bg-white);
+}
+
+.professors-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 800px;
+  margin: 40px auto 0;
+}
+
+.professor-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.professor-photo-container {
+  width: 160px;
+  height: 160px;
+  background: var(--bg-white);
+  z-index: 10;
+  box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: var(--transition);
+  border-radius: 12px;
+}
+
+.professor-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.professor-info-card {
+  background: var(--highlight);
+  /* Troque a cor se necessário */
+  color: white;
+  padding: 40px 40px 40px 80px;
+  border-radius: 30px;
+  margin-left: -60px;
+  /* Efeito overlap */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 180, 216, 0.2);
+  transition: var(--transition);
+}
+
+.professor-item:hover .professor-photo-container {
+  transform: scale(1.05);
+  box-shadow: 20px 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.professor-item:hover .professor-info-card {
+  background-color: var(--highlight-dark);
+  transform: translateX(10px);
+  box-shadow: 0 15px 40px rgba(0, 180, 216, 0.3);
+}
+
+.professor-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.professor-handle {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* =====================================================
+   11. LOJA — Produto com carrossel horizontal
+   ===================================================== */
+.story {
+  background-color: var(--bg-cream);
+}
+
+.story-container {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: var(--spacing-lg);
+  align-items: center;
+  margin-top: var(--spacing-lg);
+}
+
+/* Carrossel do produto */
+.product-carousel {
+  position: relative;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background: white;
+  aspect-ratio: 1/1;
+}
+
+.carousel-inner {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.product-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.product-img.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Botões prev/next do carrossel */
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-main);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  font-size: 1rem;
+}
+
+.carousel-nav:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.carousel-nav.prev {
+  left: 20px;
+}
+
+.carousel-nav.next {
+  right: 20px;
+}
+
+/* Detalhes do produto */
+.product-details h3 {
+  font-size: 2.2rem;
+  margin-bottom: var(--spacing-xs);
+  color: var(--text-main);
+}
+
+.product-price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: var(--spacing-md);
+}
+
+.product-description {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-md);
+}
+
+.product-features {
+  margin-bottom: var(--spacing-lg);
+}
+
+.product-features li {
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.product-features li i {
+  color: #12C75F;
+}
+
+/* =====================================================
+   12. DEPOIMENTOS — Grid de cards
+   ===================================================== */
+.testimonials {
+  background-color: var(--bg-cream);
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+}
+
+.testimonial-card {
+  background: var(--white);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: var(--transition);
+}
+
+.testimonial-card:hover {
+  transform: translateY(-10px);
+}
+
+.testimonial-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto var(--spacing-sm);
+  object-fit: cover;
+  border: 3px solid var(--primary-light);
+}
+
+.testimonial-name {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.testimonial-text {
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: var(--spacing-sm);
+}
+
+.stars {
+  color: #FFD700;
+  font-size: 1.2rem;
+}
+
+/* =====================================================
+   13. LOCALIZAÇÃO — Grid: info + mapa
+   ===================================================== */
+.location-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: var(--spacing-lg);
+  align-items: start;
+}
+
+.address-card {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  background: var(--bg-cream);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+.address-icon {
+  font-size: 1.8rem;
+  color: var(--primary);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.address-details h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.address-details p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+}
+
+.map-container {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-strong);
+}
+
+.map-container iframe {
+  display: block;
+}
+
+/* =====================================================
+   14. FOOTER — Escuro, 3 colunas
+   ===================================================== */
+.main-footer {
+  background-color: var(--bg-dark);
+  color: var(--white);
+  padding: 80px 0 0;
+  text-align: left;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+/* Coluna de marca */
+.footer-col .footer-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.footer-logo-img {
+  width: 150px;
+  height: auto;
+}
+
+.footer-description {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+/* Ícones sociais do footer */
+.main-footer .social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.main-footer .social-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--white);
+  font-size: 1.1rem;
+  transition: var(--transition);
+}
+
+.main-footer .social-icon:hover {
+  background: var(--highlight);
+}
+
+/* Título das colunas do footer */
+.footer-title {
+  color: var(--white);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.footer-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 30px;
+  height: 2px;
+  background-color: var(--highlight);
+}
+
+/* Links de atalho */
+.footer-links {
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 15px;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.7) !important;
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.footer-links a i {
+  font-size: 0.7rem;
+  color: var(--highlight);
+}
+
+.footer-links a:hover {
+  color: var(--highlight) !important;
+  transform: translateX(5px);
+}
+
+/* Info de contato */
+.contact-info p {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.contact-info i {
+  color: var(--highlight);
+  width: 20px;
+}
+
+/* Rodapé inferior */
+.footer-bottom {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 30px 0;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-bottom p {
+  margin-bottom: 5px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.footer-bottom a {
+  color: var(--highlight);
+}
+
+.footer-copy {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* =====================================================
+   15. WIDGET WHATSAPP
+   ===================================================== */
+.whatsapp-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  transition: bottom 0.3s ease-out;
+}
+
+.whatsapp-popup {
+  width: 330px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  margin-bottom: 15px;
+  overflow: hidden;
+  display: none;
+  animation: slideUp 0.3s ease-out;
+  position: relative;
+}
+
+.whatsapp-popup.active {
+  display: block;
+}
+
+/* Triângulo decorativo */
+.whatsapp-popup::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  right: 25px;
+  border-width: 10px 10px 0;
+  border-style: solid;
+  border-color: white transparent transparent;
+}
+
+.whatsapp-popup-header {
+  background: #12C75F;
+  color: white;
+  padding: 15px 35px 15px 20px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  position: relative;
+}
+
+.whatsapp-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.whatsapp-popup-body {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+}
+
+.whatsapp-logo-container {
+  width: 50px;
+  height: 50px;
+  background: #E6FCEF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #25D366;
+  font-size: 1.8rem;
+}
+
+.whatsapp-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.whatsapp-brand-small {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.whatsapp-brand-bold {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #444;
+}
+
+.whatsapp-btn {
+  background: #12C75F;
+  color: white;
+  border-radius: 50px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(18, 199, 95, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+  transform: scale(1.05);
+}
+
+/* =====================================================
+   16. RESPONSIVIDADE
+   ===================================================== */
+
+/* --- Tablet grande (≤ 992px) --- */
+@media (max-width: 992px) {
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  .story-container {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .location-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Flip card: centraliza e habilita animação de hint no mobile */
+  .self-knowledge-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    text-align: center;
+  }
+
+  .self-knowledge-content h2 {
+    text-align: center !important;
+  }
+
+  .flip-card {
+    height: 500px;
+    max-width: 400px;
+    width: 90vw;
+    margin: 0 auto;
+  }
+
+  .flip-hint {
+    animation: blink 2s infinite ease-in-out;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-top: 20px;
+  }
+}
+
+/* --- Tablet / Mobile (≤ 768px) --- */
+@media (max-width: 768px) {
+
+  /* Header */
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  header {
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  /* Hero */
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-content p {
+    font-size: 1.2rem;
+  }
+
+  /* Depoimentos */
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Serviços */
+  .classes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Título */
+  .section-title {
+    font-size: 2rem;
+  }
+
+  /* Equipe */
+  .professor-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .professor-info-card {
+    margin-left: 0;
+    margin-top: -30px;
+    padding: 60px 30px 30px;
+    width: 100%;
+    border-radius: 20px;
+  }
+
+  /* Logo footer pisca no mobile */
+  .footer-logo-img {
+    animation: blink 3s infinite ease-in-out;
+  }
+}
+
+/* --- Mobile pequeno (≤ 600px) --- */
+@media (max-width: 600px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Mobile muito pequeno (≤ 480px) --- */
+@media (max-width: 480px) {
+  .whatsapp-popup {
+    width: 280px;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Ajustes Header Corretor Mobile */
+@media (max-width: 768px) {
+  .header-content-overlay {
+    flex-direction: column !important;
+    /* Empilha verticalmente */
+    justify-content: space-between !important;
+    align-items: center !important;
+    /* Centraliza tudo horizontalmente */
+    /* O degradê agora protege do topo (logo) para baixo (Alex) */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 35%, rgba(255, 255, 255, 0) 80%) !important;
+  }
+
+  .header-logo-container {
+    align-items: center !important;
+    justify-content: center !important;
+    padding-top: 15px !important;
+    width: 100%;
+  }
+
+  .logo-header {
+    max-height: 130px !important;
+    max-width: 80vw !important;
+    object-fit: contain;
+  }
+
+  .corretor-photo {
+    height: 200px !important;
+    flex-shrink: 0;
+    margin-left: 0;
+    /* Centralização exata */
+    align-self: center !important;
+    /* Fixado no centro da tela abaixo da logo */
+  }
+
+  @keyframes slideInRightMobile {
+
+    /* Nasce subindo elegante para apoiar a simetria central */
+    from {
+      opacity: 0;
+      transform: translateY(20%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .slide-in-right {
+    animation: slideInRightMobile 2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards !important;
+  }
+}

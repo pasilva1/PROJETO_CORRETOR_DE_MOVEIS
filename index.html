@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Imobiliária em Recife | Corretores de Imóveis</title>
+    <meta name="description" content="Os melhores imóveis em Recife e região em um só lugar.">
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Bootstrap para usar as classes col-sm-6 col-md-6 etc -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-body-tertiary">
+
+    <!-- WRAPPER CENTRAL (800px - 1000px) -->
+    <div class="page-wrapper bg-white shadow-lg mx-auto">
+
+        <!-- ================================================
+             HEADER / CARROSSEL TOPO (1s)
+             Lado esquerdo: logo_header.png | Lado direito: alex.png
+        ================================================ -->
+        <header class="top-header-carousel">
+            <!-- Background Carrossel -->
+            <div class="bg-carousel">
+                <div class="bg-slide active" style="background-image: url('assets/piscina.jpg')">
+                </div>
+                <div class="bg-slide" style="background-image: url('assets/parque.jpg')"></div>
+                <div class="bg-slide" style="background-image: url('assets/piscina2.jpg')"></div>
+                <div class="bg-slide" style="background-image: url('assets/marco_zero.jpeg')"></div>
+                <div class="bg-slide" style="background-image: url('assets/recife_antigo.jpg')"></div>
+                <div class="bg-slide" style="background-image: url('assets/recife.jpg')"></div>
+            </div>
+
+            <!-- Conteúdo Fixo por cima: Esquerda Logo, Direita Foto Corretor -->
+            <div class="header-content-overlay d-flex justify-content-between">
+                <div class="header-logo-container d-flex align-items-center px-4 slide-in-left">
+                    <img src="assets/logo_av.png" alt="Logo Corretor" class="logo-header"
+                        onerror="this.src='https://ui-avatars.com/api/?name=Sua+Imobiliaria&background=random&size=150'">
+                </div>
+                <img src="assets/alex.png" alt="Alex Corretor" class="corretor-photo slide-in-right"
+                    onerror="this.src='https://ui-avatars.com/api/?name=Alex+Corretor&background=random&size=150'">
+            </div>
+        </header>
+
+        <!-- ================================================
+             MENU NAVBAR AVANÇADO COM HAMBÚRGUER E ÍCONE HOME
+        ================================================ -->
+        <nav class="navbar navbar-expand-lg bg-white sticky-top shadow-sm border-bottom py-3">
+            <div class="container-fluid px-4">
+
+                <!-- Ícone da Home dentro do menu (lado esquerdo) -->
+                <a class="navbar-brand text-dark home-icon-brand" href="index.html" title="Página Inicial">
+                    <i class="fa fa-home fs-4"></i>
+                </a>
+
+                <!-- Botão Hambúrguer Mobile -->
+                <button class="navbar-toggler border-0 focus-ring focus-ring-light" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Links Centrais -->
+                <div class="collapse navbar-collapse" id="mainMenu">
+                    <ul class="navbar-nav mx-auto fw-bold fs-6 text-center mt-3 mt-lg-0 text-uppercase"
+                        style="letter-spacing: 0.5px;">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark mx-3 hover-primary transition" href="index.html">Início</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark mx-3 hover-primary transition" href="quem-somos.html">Quem
+                                Somos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark mx-3 hover-primary transition"
+                                href="index.html#localizacao">Localização</a>
+                        </li>
+                    </ul>
+
+                    <!-- Espaçador à direita no desktop para centralizar o menu propriamente dito -->
+                    <div class="d-none d-lg-block" style="width: 50px;"></div>
+                </div>
+            </div>
+        </nav>
+
+        <main>
+            <!-- ================================================
+                 CARROSSEL DE IMÓVEIS DESTAQUES
+            ================================================ -->
+            <section class="section pt-4 pb-3 bg-white">
+                <div class="container position-relative px-4">
+                    <h2 class="display-6 fw-bold text-center text-dark mb-4 fade-in">Imóveis Destaques !</h2>
+                    <div id="imoveisCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner rounded overflow-hidden" id="carousel-destaques-imoveis">
+                            <!-- Imagens geradas via JavaScript -->
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#imoveisCarousel"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon p-3" aria-hidden="true"
+                                style="background-color:rgba(0,0,0,0.6); border-radius:50%;"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#imoveisCarousel"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon p-3" aria-hidden="true"
+                                style="background-color:rgba(0,0,0,0.6); border-radius:50%;"></span>
+                            <span class="visually-hidden">Próximo</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================
+                 TEXTOS / OTIMIZAÇÃO
+            ================================================ -->
+            <section class="c49mod-otimization-index text-center section bg-light border-0">
+                <div class="container px-4">
+                    <h2 class="display-6 fw-bold text-dark mb-3">A sua imobiliária em Recife.</h2>
+                    <p class="fs-5 text-secondary">Os melhores imóveis em Recife e região em um só lugar</p>
+                </div>
+            </section>
+
+            <!-- ================================================
+                 VITRINE DE IMÓVEIS (15 Card Decks)
+            ================================================ -->
+            <section class="properties-list section bg-white">
+                <div class="container px-4">
+                    <div class="row g-4" id="properties-grid">
+                        <!-- Cards de imóveis gerados via JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================
+                 LOCALIZAÇÃO
+            ================================================ -->
+            <section class="section location-section bg-light" id="localizacao">
+                <div class="container px-4">
+                    <h2 class="section-title fade-in text-center mb-5 fw-bold">Nossa Localização</h2>
+                    <div class="row g-4 fade-in">
+                        <!-- Info do endereço -->
+                        <div class="col-lg-5">
+                            <div class="address-card p-4 bg-white rounded shadow-sm d-flex gap-3 h-100">
+                                <div class="address-icon text-primary fs-2 mt-1">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="address-details pt-2">
+                                    <h3 class="fs-4 fw-bold text-dark">Endereço</h3>
+                                    <p class="mb-1 text-secondary">Avenida Boa Viagem, 1234</p>
+                                    <p class="mb-1 text-secondary">Empresarial Top</p>
+                                    <p class="mb-1 text-secondary">Boa Viagem, Recife - PE</p>
+                                    <p class="mb-0 text-secondary">CEP: 51000-000</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Google Maps Embed -->
+                        <div class="col-lg-7">
+                            <div class="map-container rounded overflow-hidden shadow-sm h-100">
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126487.68307675712!2d-35.0069324684947!3d-8.040187834575916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ab196f88c446e5%3A0x3c9ef52922447fd4!2sRecife%2C%20PE!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr"
+                                    width="100%" height="100%" style="border:0; min-height: 250px;" allowfullscreen=""
+                                    loading="lazy">
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4 fade-in">
+                        <a href="https://www.google.com/maps" target="_blank"
+                            class="btn btn-primary py-3 px-5 rounded-pill fw-bold shadow-sm">
+                            <i class="fas fa-external-link-alt me-2"></i> Ver no Google Maps
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- ================================================
+             FOOTER
+        ================================================ -->
+        <footer id="contato" class="main-footer bg-dark text-white pt-5">
+            <div class="container px-4">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4 text-center text-md-start">
+                        <img src="assets/logo_av.png" alt="Logo" class="img-fluid mb-3 bg-white p-2 rounded shadow-sm"
+                            style="max-height: 70px;"
+                            onerror="this.src='https://ui-avatars.com/api/?name=Sua+Imobiliaria&background=random&size=150'">
+                        <p class="text-white-50 small">Sua melhor escolha para imóveis de qualidade em Recife e região
+                            metropolitana.</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h5 class="text-uppercase mb-3 fs-6 letter-spacing-1">Atalhos</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="#"
+                                    class="text-white-50 text-decoration-none hover-white transition">Início</a></li>
+                            <li class="mb-2"><a href="quem-somos.html"
+                                    class="text-white-50 text-decoration-none hover-white transition">Quem Somos</a>
+                            </li>
+                            <li class="mb-2"><a href="#localizacao"
+                                    class="text-white-50 text-decoration-none hover-white transition">Localização</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 text-center text-md-end">
+                        <h5 class="text-uppercase mb-3 fs-6 letter-spacing-1">Contato</h5>
+                        <p class="text-white-50 mb-1"><i class="far fa-envelope me-2"></i> contato@imobiliaria.com.br
+                        </p>
+                        <p class="text-white-50"><i class="fab fa-whatsapp me-2"></i> +55 81 98888-8888</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-black py-4 text-center text-white-50 small border-top border-secondary">
+                <div class="container">
+                    <p class="mb-1">Desenvolvido por <a href="https://www.patrickataide.com.br" target="_blank"
+                            class="text-white text-decoration-none hover-white">www.patrickataide.com.br</a></p>
+                    <p class="mb-1">Automação e Desenvolvimento Empresarial.</p>
+                    <p class="mb-1">Contato - <a href="https://wa.me/5581989304727" target="_blank"
+                            class="text-white text-decoration-none hover-white">55 81 98930-4727</a></p>
+                    <p class="mb-0 mt-3">&copy; <span id="current-year"></span> Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </footer>
+
+    </div> <!-- FINAL DO PAGE-WRAPPER CENTRALIZADO -->
+
+    <!-- ================================================
+         WIDGET WHATSAPP — Fixo no canto inferior direito
+    ================================================ -->
+    <div id="whatsapp-widget" class="whatsapp-widget">
+        <div id="whatsapp-popup" class="whatsapp-popup">
+            <div class="whatsapp-popup-header" style="background-color: #25D366; color: white;">
+                <p>Olá! Clique aqui e um de nossos representantes entrará em contato com você o mais breve possível.</p>
+                <button id="whatsapp-close"
+                    class="whatsapp-close border-0 bg-transparent text-white fw-bold">&times;</button>
+            </div>
+            <div class="whatsapp-popup-body d-flex align-items-center gap-3 p-3 bg-white" id="whatsapp-body"
+                style="cursor: pointer; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                <div class="whatsapp-logo-container rounded-circle bg-success bg-opacity-10 d-flex justify-content-center align-items-center"
+                    style="width: 50px; height: 50px;">
+                    <i class="fab fa-whatsapp fa-2x text-success"></i>
+                </div>
+                <div class="whatsapp-text">
+                    <span class="whatsapp-brand-small text-muted d-block" style="font-size: 0.8rem;">Alex
+                        Corretor</span>
+                    <span class="whatsapp-brand-bold fw-bold text-dark d-block">Fale conosco !</span>
+                </div>
+            </div>
+        </div>
+
+        <button id="whatsapp-btn"
+            class="whatsapp-btn btn btn-success rounded-pill px-4 py-3 mt-3 shadow-lg fw-bold d-flex align-items-center gap-2"
+            style="background-color: #25D366; border: none;">
+            <i class="fab fa-whatsapp fs-4"></i> Converse via WhatsApp
+        </button>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
