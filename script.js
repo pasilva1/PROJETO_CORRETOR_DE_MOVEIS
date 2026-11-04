@@ -3,6 +3,8 @@
    ===================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+    const whatsappNumber = '5581989304727';
+    const whatsappDisplayNumber = '(81) 98930-4727';
 
     // =====================================================
     // 1. HEADER CAROUSEL (5 segundos)
@@ -18,101 +20,227 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =====================================================
-    // 2. CARROSSEL IMÓVEIS DESTAQUES (15 imóveis)
+    // 2. IMÓVEIS (carregados das páginas de detalhes)
     // =====================================================
     const carouselImoveis = document.getElementById('carousel-destaques-imoveis');
-    if (carouselImoveis) {
-        // Seeds usados na primeira imagem de cada imovel-N.html
-        // Todos usam "imovelA" como seed da primeira foto, mas usamos seed único por imóvel para variedade visual
-        const seeds = [
-            'imovelA','imovelB','imovelC','imovelD','imovelE',
-            'imovelF','imovelG','imovelH','imovelI','imovelJ',
-            'imovelK','imovelL','imovelM','imovelN','imovelO'
-        ];
-        let slidesHTML = '';
-        for (let i = 1; i <= 15; i++) {
-            const activeClass = i === 1 ? 'active' : '';
-            const seed = seeds[i - 1];
-            slidesHTML += `
-                <div class="carousel-item ${activeClass}" style="cursor:pointer;" onclick="window.location.href='imoveis/imovel-${i}.html'">
-                    <div style="position:relative;">
-                        <img src="https://picsum.photos/seed/${seed}/900/420" class="d-block w-100" alt="Imóvel Destaque ${i}" style="object-fit:cover; height:420px;">
-                        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.65));padding:24px 32px 20px;">
-                            <span class="badge bg-primary mb-2" style="font-size:0.85rem;">Imóvel ${i}</span>
-                            <h5 class="text-white fw-bold mb-0" style="font-size:1.2rem;">Residencial Get Like ${i}</h5>
-                            <p class="text-white-50 mb-0 small">Boa Viagem, Recife — Clique para ver detalhes</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        carouselImoveis.innerHTML = slidesHTML;
-    }
-
-    // =====================================================
-    // 3. VITRINE DE 15 IMÓVEIS (Card Decks)
-    // =====================================================
     const gridImoveis = document.getElementById('properties-grid');
-    if (gridImoveis) {
-        let cardsHTML = '';
-        for (let i = 1; i <= 15; i++) {
-            // Gerando valores aleatórios para simular imóveis reais
-            const area = Math.floor(Math.random() * 150) + 40;
-            const quartos = Math.floor(Math.random() * 4) + 1;
-            const vagas = Math.floor(Math.random() * 3);
-            const ref = Math.floor(Math.random() * 90000) + 10000;
-            const price = (Math.random() * 800000 + 150000).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const paginationImoveis = document.getElementById('properties-pagination');
+    const propertiesPerPage = 12;
+    let currentPropertyPage = 1;
+    let loadedProperties = [];
+    const escapeHtml = (value) => value.replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[character]);
 
-            // Classes solicitadas no prompt: col-sm-6 col-md-6 col-lg-6 col-xl-4 col-xxl-3 card-deck
-            cardsHTML += `
-                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-4 col-xxl-3 card-deck fade-in" style="cursor: pointer;" onclick="window.location.href='imoveis/imovel-${i}.html';">
-                    <div class="card h-100 shadow-sm border-0 position-relative">
-                        <!-- Imagem do Imóvel com Conteúdo Deslizante (Hover) -->
-                        <div class="property-image-wrapper w-100 position-relative bg-light">
-                            <span class="badge bg-primary position-absolute top-0 start-0 m-3 p-2 fs-6 z-2">Venda</span>
-                            <img src="https://picsum.photos/seed/card${i}/500/400" class="w-100 h-100" alt="Imóvel Vitrine ${i}" style="object-fit: cover;">
-                            
-                            <!-- Overlay que sobe ao passar o mouse -->
-                            <div class="property-overlay-info">
-                                <h5 class="card-title fw-bold text-dark mb-2">Residencial Get Like ${i}</h5>
-                                <p class="card-text text-secondary mb-3 small" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">Experimente o melhor de Recife com alto padrão e conforto no coração de Boa Viagem!</p>
-                                <div class="d-flex align-items-baseline gap-2 mb-1">
-                                    <span class="fs-6 text-muted">R$</span>
-                                    <h4 class="text-dark fw-bolder mb-0">${price}</h4>
-                                </div>
-                                <p class="text-secondary small mb-0">Boa Viagem, Recife</p>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-white p-3">
-                            <div class="d-flex justify-content-between text-center w-100 mb-3">
-                                <div class="c49icon-area-1 flex-fill">
-                                    <div class="text-secondary fs-4 mb-1"><i class="fa fa-ruler-combined"></i></div>
-                                    <div class="text-primary fw-medium" style="font-size: 0.85rem;">${area} m²</div>
-                                </div>
-                                <div class="c49icon-bedroom-1 flex-fill">
-                                    <div class="text-secondary fs-4 mb-1"><i class="fa fa-bed"></i></div>
-                                    <div class="text-primary fw-medium" style="font-size: 0.85rem;">${quartos} quarto${quartos !== 1 ? 's' : ''}</div>
-                                </div>
-                                <div class="c49icon-bathroom-1 flex-fill">
-                                    <div class="text-secondary fs-4 mb-1"><i class="fa fa-shower"></i></div>
-                                    <div class="text-primary fw-medium" style="font-size: 0.85rem;">${Math.max(1, quartos - 1)} banh.</div>
-                                </div>
-                                <div class="c49icon-garage-1 flex-fill">
-                                    <div class="text-secondary fs-4 mb-1"><i class="fa fa-car"></i></div>
-                                    <div class="text-primary fw-medium" style="font-size: 0.85rem;">${vagas} vaga${vagas !== 1 ? 's' : ''}</div>
-                                </div>
-                            </div>
-                            
-                            <div class="c49-property-number-wrap w-100 text-center pt-2" style="border-top: 1px solid #eee;">
-                                <span class="c49-property-number text-muted" style="font-size: 0.8rem;">REF: ${ref}</span>
-                            </div>
+    const renderPropertyPage = () => {
+        if (!gridImoveis) {
+            return;
+        }
+
+        const pageCount = Math.ceil(loadedProperties.length / propertiesPerPage);
+        currentPropertyPage = Math.min(currentPropertyPage, pageCount);
+        const startIndex = (currentPropertyPage - 1) * propertiesPerPage;
+        const pageProperties = loadedProperties.slice(startIndex, startIndex + propertiesPerPage);
+
+        gridImoveis.innerHTML = pageProperties.map((property) => `
+            <div class="col-sm-6 col-md-6 col-lg-6 col-xl-4 col-xxl-3 card-deck fade-in">
+                <a class="card h-100 shadow-sm border-0 position-relative text-decoration-none text-dark"
+                    href="${property.url}">
+                    <div class="property-image-wrapper w-100 position-relative bg-light">
+                        <span class="badge bg-primary position-absolute top-0 start-0 m-3 p-2 fs-6 z-2">${escapeHtml(property.reference)}</span>
+                        <img src="${escapeHtml(property.image)}" class="w-100 h-100"
+                            alt="${escapeHtml(property.title)}" style="object-fit:cover;">
+                        <div class="property-overlay-info">
+                            <h5 class="card-title fw-bold text-dark mb-2">${escapeHtml(property.title)}</h5>
+                            <p class="card-text text-secondary mb-3 small">${escapeHtml(property.summary)}</p>
+                            <h4 class="text-dark fw-bolder mb-0">${escapeHtml(property.price)}</h4>
                         </div>
                     </div>
-                </div>
-            `;
+                    <div class="card-footer bg-white p-3">
+                        <div class="d-flex flex-wrap justify-content-around gap-2 text-center w-100 mb-3">
+                            ${property.features.map((feature) => `
+                                <span class="text-primary fw-medium small">${escapeHtml(feature)}</span>
+                            `).join('')}
+                        </div>
+                        <div class="w-100 text-center pt-2 border-top">
+                            <span class="text-muted small">${escapeHtml(property.reference)}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        `).join('');
+
+        gridImoveis.querySelectorAll('.fade-in').forEach((element) => observer.observe(element));
+
+        if (!paginationImoveis) {
+            return;
         }
-        gridImoveis.innerHTML = cardsHTML;
+
+        if (pageCount <= 1) {
+            paginationImoveis.innerHTML = '';
+            return;
+        }
+
+        const firstItem = startIndex + 1;
+        const lastItem = Math.min(startIndex + propertiesPerPage, loadedProperties.length);
+        const visiblePages = [];
+        const windowStart = Math.max(1, currentPropertyPage - 2);
+        const windowEnd = Math.min(pageCount, currentPropertyPage + 2);
+
+        if (windowStart > 1) {
+            visiblePages.push(1);
+            if (windowStart > 2) {
+                visiblePages.push(null);
+            }
+        }
+
+        for (let page = windowStart; page <= windowEnd; page++) {
+            visiblePages.push(page);
+        }
+
+        if (windowEnd < pageCount) {
+            if (windowEnd < pageCount - 1) {
+                visiblePages.push(null);
+            }
+            visiblePages.push(pageCount);
+        }
+
+        const pageButtons = visiblePages.map((page) => page === null
+            ? '<li class="page-item disabled"><span class="page-link" aria-hidden="true">&hellip;</span></li>'
+            : `<li class="page-item${page === currentPropertyPage ? ' active' : ''}">
+                <button class="page-link" type="button" data-page="${page}"
+                    aria-label="Página ${page}"${page === currentPropertyPage ? ' aria-current="page"' : ''}>
+                    ${page}
+                </button>
+            </li>`
+        ).join('');
+
+        paginationImoveis.innerHTML = `
+            <div class="d-flex flex-column align-items-center gap-2">
+                <p class="mb-0 text-muted small" aria-live="polite">
+                    Exibindo ${firstItem}–${lastItem} de ${loadedProperties.length} imóveis
+                </p>
+                <ul class="pagination justify-content-center mb-0">
+                    <li class="page-item${currentPropertyPage === 1 ? ' disabled' : ''}">
+                        <button class="page-link" type="button" data-page="${currentPropertyPage - 1}"
+                            aria-label="Página anterior"${currentPropertyPage === 1 ? ' disabled' : ''}>
+                            Anterior
+                        </button>
+                    </li>
+                    ${pageButtons}
+                    <li class="page-item${currentPropertyPage === pageCount ? ' disabled' : ''}">
+                        <button class="page-link" type="button" data-page="${currentPropertyPage + 1}"
+                            aria-label="Próxima página"${currentPropertyPage === pageCount ? ' disabled' : ''}>
+                            Próxima
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        `;
+    };
+
+    if (paginationImoveis) {
+        paginationImoveis.addEventListener('click', (event) => {
+            const button = event.target.closest('button[data-page]');
+            if (!button || button.disabled) {
+                return;
+            }
+
+            const page = Number(button.dataset.page);
+            const pageCount = Math.ceil(loadedProperties.length / propertiesPerPage);
+            if (Number.isInteger(page) && page >= 1 && page <= pageCount) {
+                currentPropertyPage = page;
+                renderPropertyPage();
+            }
+        });
     }
+
+    const loadPropertyDetails = async () => {
+        const properties = [];
+        let nextPropertyId = 1;
+
+        while (true) {
+            const propertyBatch = await Promise.all(
+                Array.from({ length: propertiesPerPage }, async (_, index) => {
+                    const id = nextPropertyId + index;
+                    const detailUrl = new URL(`imoveis/imovel-${id}.html`, document.baseURI);
+                    const response = await fetch(detailUrl);
+                    if (response.status === 404) {
+                        return null;
+                    }
+                    if (!response.ok) {
+                        throw new Error(`Falha ao carregar ${detailUrl.pathname}: HTTP ${response.status}`);
+                    }
+
+                    const page = new DOMParser().parseFromString(await response.text(), 'text/html');
+                    const readText = (selector) => {
+                        const element = page.querySelector(selector);
+                        if (!element) {
+                            throw new Error(`${detailUrl.pathname}: elemento "${selector}" não encontrado`);
+                        }
+                        return element.textContent.trim();
+                    };
+                    const mainImage = page.querySelector('.property-gallery-main');
+                    if (!mainImage?.getAttribute('src')) {
+                        throw new Error(`${detailUrl.pathname}: imagem principal do imóvel não encontrada`);
+                    }
+
+                    return {
+                        id,
+                        url: detailUrl.href,
+                        title: readText('.property-details h2'),
+                        summary: readText('.property-details > p.text-secondary.fs-6'),
+                        price: readText('.property-details > p.text-dark.fw-bold'),
+                        reference: readText('.property-icons-row .badge-ref'),
+                        features: Array.from(page.querySelectorAll('.property-icons-row span:not(.badge-ref)'))
+                            .map((feature) => feature.textContent.trim()),
+                        image: new URL(mainImage.getAttribute('src'), detailUrl).href
+                    };
+                })
+            );
+            const availableProperties = propertyBatch.filter((property) => property !== null);
+            if (availableProperties.length === 0) {
+                if (properties.length === 0) {
+                    throw new Error('Nenhuma página de imóvel foi encontrada em /imoveis/.');
+                }
+                break;
+            }
+
+            properties.push(...availableProperties);
+            nextPropertyId += propertiesPerPage;
+        }
+
+        if (carouselImoveis) {
+            carouselImoveis.innerHTML = properties.map((property, index) => `
+                <div class="carousel-item${index === 0 ? ' active' : ''}">
+                    <a class="d-block position-relative text-decoration-none" href="${property.url}">
+                        <img src="${escapeHtml(property.image)}" class="d-block w-100"
+                            alt="${escapeHtml(property.title)}" style="object-fit:cover; height:420px;">
+                        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.75));padding:24px 32px 20px;">
+                            <span class="badge bg-primary mb-2">${escapeHtml(property.reference)}</span>
+                            <h5 class="text-white fw-bold mb-1">${escapeHtml(property.title)}</h5>
+                            <p class="text-white-50 mb-1 small">${escapeHtml(property.summary)}</p>
+                            <span class="text-white fw-bold">${escapeHtml(property.price)}</span>
+                        </div>
+                    </a>
+                </div>
+            `).join('');
+
+            const carousel = document.getElementById('imoveisCarousel');
+            if (carousel && window.bootstrap?.Carousel) {
+                window.bootstrap.Carousel.getOrCreateInstance(carousel).cycle();
+            }
+        }
+
+        if (gridImoveis) {
+            loadedProperties = properties;
+            renderPropertyPage();
+        }
+    };
 
     // =====================================================
     // 4. ANO ATUAL (Footer)
@@ -134,13 +262,109 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, observerOptions);
 
+    if (carouselImoveis || gridImoveis) {
+        loadPropertyDetails().catch((error) => {
+            console.error('Não foi possível carregar os imóveis das páginas de detalhes.', error);
+            const message = '<p class="alert alert-danger" role="alert">Não foi possível carregar os imóveis. Abra o site usando um servidor local ou acesse pelo site publicado.</p>';
+            if (carouselImoveis) {
+                carouselImoveis.innerHTML = message;
+            }
+            if (gridImoveis) {
+                gridImoveis.innerHTML = message;
+            }
+        });
+    }
+
     // Usa setTimeout para garantir que elementos dinâmicos foram renderizados
     setTimeout(() => {
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     }, 500);
 
     // =====================================================
-    // 6. WIDGET WHATSAPP LOGIC
+    // 6. CONTATO DO IMÓVEL VIA WHATSAPP
+    // =====================================================
+    const propertyPanel = document.querySelector('.position-sticky');
+    if (propertyPanel) {
+        const propertyTitle = document.querySelector('.property-details h2')?.textContent.trim() || document.title;
+        const propertyReference = document.querySelector('.badge-ref')?.textContent.trim();
+        const propertyLabel = propertyReference
+            ? `${propertyTitle} (${propertyReference})`
+            : propertyTitle;
+        const createWhatsAppUrl = (message) =>
+            `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+        const openWhatsApp = (message) => {
+            window.open(createWhatsAppUrl(message), '_blank', 'noopener,noreferrer');
+        };
+        const baseMessage = (request) =>
+            `Olá, Alex! Vi este anúncio de terceiro exibido como demonstração no site: ${propertyLabel}. Gostaria de ${request}. Você representa este imóvel e pode confirmar os dados e a disponibilidade?`;
+
+        const brokerPhone = propertyPanel.querySelector('.card-body .text-success');
+        if (brokerPhone) {
+            const icon = brokerPhone.querySelector('i');
+            brokerPhone.textContent = '';
+            if (icon) {
+                brokerPhone.append(icon);
+            }
+            brokerPhone.append(` ${whatsappDisplayNumber}`);
+        }
+
+        const whatsappLink = propertyPanel.querySelector('a.btn-whatsapp-custom');
+        if (whatsappLink) {
+            whatsappLink.href = createWhatsAppUrl(baseMessage('falar'));
+            whatsappLink.rel = 'noopener noreferrer';
+        }
+
+        const visitButton = propertyPanel.querySelector('.d-grid button .fa-home')?.closest('button');
+        visitButton?.addEventListener('click', () => {
+            openWhatsApp(baseMessage('solicitar uma visita'));
+        });
+
+        const proposalButton = propertyPanel.querySelector('.d-grid button .fa-thumbs-up')?.closest('button');
+        proposalButton?.addEventListener('click', () => {
+            openWhatsApp(baseMessage('fazer uma proposta'));
+        });
+
+        const contactForm = propertyPanel.querySelector('form');
+        const [nameInput, phoneInput] = contactForm?.querySelectorAll('input') || [];
+        if (contactForm && nameInput && phoneInput) {
+            nameInput.required = true;
+            nameInput.autocomplete = 'name';
+            nameInput.setAttribute('aria-label', 'Seu nome');
+            phoneInput.required = true;
+            phoneInput.autocomplete = 'tel';
+            phoneInput.setAttribute('aria-label', 'Seu telefone com DDD');
+            phoneInput.addEventListener('input', () => phoneInput.setCustomValidity(''));
+
+            contactForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                nameInput.setCustomValidity('');
+                phoneInput.setCustomValidity('');
+
+                const name = nameInput.value.trim();
+                const phone = phoneInput.value.trim();
+                const phoneDigits = phone.replace(/\D/g, '');
+
+                if (!name) {
+                    nameInput.setCustomValidity('Informe seu nome.');
+                    nameInput.reportValidity();
+                    return;
+                }
+
+                if (phoneDigits.length < 10 || phoneDigits.length > 13) {
+                    phoneInput.setCustomValidity('Informe um telefone válido com DDD.');
+                    phoneInput.reportValidity();
+                    return;
+                }
+
+                openWhatsApp(
+                    `${baseMessage('deixar meu contato')}\nNome: ${name}\nTelefone: ${phone}`
+                );
+            });
+        }
+    }
+
+    // =====================================================
+    // 7. WIDGET WHATSAPP LOGIC
     // =====================================================
     const whatsappBtn   = document.getElementById('whatsapp-btn');
     const whatsappPopup = document.getElementById('whatsapp-popup');
@@ -148,7 +372,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const whatsappBody  = document.getElementById('whatsapp-body');
 
     if (whatsappBtn && whatsappPopup) {
-        const whatsappNumber = '5581988888888'; // Phone requested
         const whatsappMessage = 'Olá! Gostaria de falar com o corretor responsável sobre os imóveis.';
         const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
