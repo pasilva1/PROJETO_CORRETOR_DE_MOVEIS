@@ -46,6 +46,9 @@
                 </div>
                 <img src="assets/alex.png" alt="Seu Nome" class="corretor-photo slide-in-right"
                     onerror="this.src='https://ui-avatars.com/api/?name=Alex+Corretor&background=random&size=150'">
+                <a class="header-login-button" href="painel.html">
+                    <i class="fa-solid fa-right-to-bracket me-1" aria-hidden="true"></i> Login
+                </a>
             </div>
         </header>
 
@@ -132,6 +135,14 @@
             ================================================ -->
             <section class="properties-list section bg-white">
                 <div class="container px-4">
+                    <nav id="property-type-filters" class="property-type-filters mb-4" aria-label="Filtrar imóveis por tipo">
+                        <button type="button" class="property-type-filter active" data-property-type="Todos" aria-pressed="true">Todos</button>
+                        <button type="button" class="property-type-filter" data-property-type="Apartamento" aria-pressed="false">Apartamento</button>
+                        <button type="button" class="property-type-filter" data-property-type="Sala Comercial" aria-pressed="false">Sala Comercial</button>
+                        <button type="button" class="property-type-filter" data-property-type="Barracão" aria-pressed="false">Barracão</button>
+                        <button type="button" class="property-type-filter" data-property-type="Casa" aria-pressed="false">Casa</button>
+                        <button type="button" class="property-type-filter" data-property-type="Outros" aria-pressed="false">Outros</button>
+                    </nav>
                     <div class="row g-4" id="properties-grid">
                         <!-- Cards de imóveis gerados via JavaScript -->
                     </div>

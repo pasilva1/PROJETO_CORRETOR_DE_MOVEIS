@@ -6,12 +6,17 @@ Site institucional de apresentação e divulgação de imóveis em Recife e regi
 
 - `index.html`: página inicial, apresentação e vitrine de imóveis.
 - `quem-somos.html`: informações sobre o corretor.
+- `painel.html`: painel administrativo para gerenciar imóveis em destaque.
 - `imovel.html`: página de detalhes de imóvel.
 - `imoveis/`: páginas individuais dos imóveis.
 
 ## Executar localmente
 
 O projeto é estático e não requer instalação de dependências. Como a página inicial lê os dados das páginas de imóveis, sirva a pasta com um servidor HTTP local (por exemplo, a extensão Live Server do VS Code). Abrir `index.html` diretamente como arquivo não permite que o navegador carregue essas páginas.
+
+## Painel administrativo
+
+Após entrar em `painel.html`, use **Cadastrar novo imóvel** para criar um anúncio ou **Editar** para alterar um imóvel existente. O formulário permite adicionar imagens à galeria. Como não há backend, novos anúncios e alterações ficam no armazenamento local do navegador, não alteram os arquivos do site e não ficam disponíveis para outros visitantes. A tela de login também é apenas uma barreira visual; autenticação segura e publicação permanente das alterações exigem um servidor/backend.
 
 ## Catálogo demonstrativo da OLX
 

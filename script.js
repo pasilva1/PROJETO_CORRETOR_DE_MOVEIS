@@ -28,41 +28,258 @@ document.addEventListener('DOMContentLoaded', () => {
     const propertiesPerPage = 12;
     let currentPropertyPage = 1;
     let loadedProperties = [];
-    const escapeHtml = (value) => value.replace(/[&<>"']/g, (character) => ({
+    const propertyOverridesKey = 'corretor_property_overrides';
+    const propertyImagesKey = 'corretor_property_images';
+    const deletedPropertiesKey = 'corretor_deleted_properties';
+    const createdPropertiesKey = 'corretor_created_properties';
+    const readJson = (key, fallback = {}) => {
+        try {
+            const raw = localStorage.getItem(key);
+            return raw ? JSON.parse(raw) : fallback;
+        } catch (error) {
+            console.warn(`Não foi possível ler ${key}.`, error);
+            return fallback;
+        }
+    };
+    const getPropertyOverrides = () => readJson(propertyOverridesKey, {});
+    const getPropertyImages = () => readJson(propertyImagesKey, {});
+    const getDeletedProperties = () => readJson(deletedPropertiesKey, []);
+    const normalizeText = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const inferPropertyType = (title) => {
+        const normalizedTitle = normalizeText(title);
+        if (/\b(apartamento|apart|flat|kitnet|studio)\b/.test(normalizedTitle)) return 'Apartamento';
+        if (/\b(sala comercial|salao comercial|loja|escritorio)\b/.test(normalizedTitle)) return 'Sala Comercial';
+        if (/\b(barracao|galpao|armazem)\b/.test(normalizedTitle)) return 'Barracão';
+        if (/\b(casa|chacara|sitio|condominio|prive)\b/.test(normalizedTitle)) return 'Casa';
+        return 'Outros';
+    };
+    const inferOperations = (text) => {
+        const normalizedText = normalizeText(text);
+        const operations = [];
+        if (/\b(venda|vender|vende|venda-se|a venda)\b/.test(normalizedText)) operations.push('Venda');
+        if (/\b(aluguel|alugar|aluga|locacao|locar)\b/.test(normalizedText)) operations.push('Aluguel');
+        return operations.length > 0 ? operations : ['Venda'];
+    };
+    const typeFilters = document.getElementById('property-type-filters');
+    const applyOverridesToProperty = (property) => {
+        const overrides = getPropertyOverrides()[property.id] || {};
+        const images = getPropertyImages();
+        const savedGallery = images[property.id];
+        const galleryImages = Array.isArray(savedGallery)
+            ? savedGallery
+            : savedGallery?.dataUrl
+                ? [{ src: savedGallery.dataUrl, filename: savedGallery.filename || '' }]
+                : property.galleryImages || [];
+        const image = Array.isArray(savedGallery)
+            ? (galleryImages[0]?.src || '')
+            : (galleryImages[0]?.src || overrides.image || property.image);
+
+        return {
+            ...property,
+            ...overrides,
+            image,
+            galleryImages,
+            title: overrides.title || property.title,
+            summary: overrides.summary || property.summary,
+            reference: property.reference,
+            city: overrides.city || property.city,
+            price: overrides.price ?? property.price,
+            features: overrides.features || property.features,
+            type: overrides.type || property.type || inferPropertyType(property.title),
+            operations: overrides.operations || property.operations || ['Venda'],
+            featured: Boolean(overrides.featured ?? property.featured)
+        };
+    };
+    let activePropertyType = 'Todos';
+    const getFilteredProperties = () => activePropertyType === 'Todos'
+        ? loadedProperties
+        : loadedProperties.filter((property) => property.type === activePropertyType);
+    const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
         '&': '&amp;',
         '<': '&lt;',
         '>': '&gt;',
         '"': '&quot;',
         "'": '&#39;'
     })[character]);
+    const formatAdvertisedPrice = (value) => {
+        if (typeof value === 'number' && Number.isFinite(value)) {
+            return `Preço anunciado: ${new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value)}`;
+        }
+
+        const priceText = String(value ?? '').trim();
+        const numericText = priceText.replace(/[^\d,.-]/g, '');
+        const normalizedPrice = numericText.includes(',')
+            ? numericText.replace(/\./g, '').replace(',', '.')
+            : numericText.replace(/\./g, '');
+        const price = Number(normalizedPrice);
+
+        if (!Number.isFinite(price)) {
+            return priceText ? `Preço anunciado: ${priceText}` : 'Preço anunciado: Consulte';
+        }
+
+        return `Preço anunciado: ${new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(price)}`;
+    };
+    const applyCurrentPageOverride = () => {
+        const propertyIdMatch = window.location.pathname.match(/imovel-(\d+)\.html/i);
+        const queryPropertyId = new URLSearchParams(window.location.search).get('id');
+        const propertyId = propertyIdMatch ? Number(propertyIdMatch[1]) : Number(queryPropertyId);
+        if (!Number.isInteger(propertyId) || propertyId < 1) {
+            return;
+        }
+
+        const isGenericDetailPage = window.location.pathname.endsWith('/imovel.html');
+        const createdProperty = isGenericDetailPage
+            ? readJson(createdPropertiesKey, []).find((property) => property.id === propertyId)
+            : null;
+        if (isGenericDetailPage && !createdProperty) {
+            return;
+        }
+
+        const overrides = getPropertyOverrides()[propertyId];
+        if (!overrides && !createdProperty) {
+            return;
+        }
+
+        const titleElement = document.querySelector('.property-details h2');
+        const summaryElement = document.querySelector('.property-details > p.text-secondary.fs-6');
+        const descriptionElement = document.querySelector('.property-details > p.text-secondary.lh-lg');
+        const priceElement = document.querySelector('.property-details > p.text-dark.fw-bold');
+        const mainImageElement = document.querySelector('.property-gallery-main');
+        const galleryImages = getPropertyImages()[propertyId];
+        const featureElements = document.querySelectorAll('.property-icons-row span:not(.badge-ref)');
+
+        if (createdProperty) {
+            const property = { ...createdProperty, ...overrides };
+            const images = Array.isArray(galleryImages) ? galleryImages : [];
+            const carouselInner = document.querySelector('#propertyGallery .carousel-inner');
+            const thumbnailContainer = document.querySelector('.gallery-thumbs');
+
+            if (carouselInner) {
+                carouselInner.innerHTML = images.map((image, index) => `
+                    <div class="carousel-item${index === 0 ? ' active' : ''}">
+                        <img src="${escapeHtml(image.src)}" class="property-gallery-main img-fluid w-100"
+                            alt="Imagem ${index + 1} do imóvel ${propertyId}">
+                    </div>
+                `).join('');
+            }
+            if (thumbnailContainer) {
+                thumbnailContainer.innerHTML = images.map((image, index) => `
+                    <img src="${escapeHtml(image.src)}" class="img-fluid${index === 0 ? ' active' : ''}"
+                        style="width: 120px;" alt="Miniatura ${index + 1} do imóvel ${propertyId}"
+                        data-gallery-index="${index}">
+                `).join('');
+                thumbnailContainer.addEventListener('click', (event) => {
+                    const thumbnail = event.target.closest('img[data-gallery-index]');
+                    if (!thumbnail) return;
+                    const carousel = document.getElementById('propertyGallery');
+                    window.bootstrap?.Carousel.getOrCreateInstance(carousel).to(Number(thumbnail.dataset.galleryIndex));
+                });
+            }
+
+            const details = document.querySelector('.property-details');
+            const titleElement = details?.querySelector('h2');
+            const cityElement = details?.querySelector('p.text-secondary.fs-6');
+            const descriptionElement = details?.querySelector('p.text-secondary.lh-lg');
+            const priceElement = details?.querySelector('p.text-dark.fw-bold');
+            const referenceElement = details?.querySelector('.badge-ref');
+            const iconsRow = details?.querySelector('.property-icons-row');
+            if (titleElement) titleElement.textContent = property.title;
+            if (cityElement) cityElement.textContent = property.city;
+            if (descriptionElement) descriptionElement.textContent = property.summary;
+            if (priceElement) priceElement.textContent = formatAdvertisedPrice(property.price);
+            if (referenceElement) referenceElement.textContent = `Cod.: ${property.reference}`;
+            if (iconsRow) {
+                const icons = ['fa-ruler-combined', 'fa-bed', 'fa-shower', 'fa-car'];
+                iconsRow.innerHTML = (property.features || []).map((feature, index) => `
+                    <span><i class="fa ${icons[index] || 'fa-circle-info'}" aria-hidden="true"></i> ${escapeHtml(feature)}</span>
+                `).join('') + `<span class="badge-ref ms-auto mt-2 mt-sm-0">Cod.: ${escapeHtml(property.reference)}</span>`;
+            }
+            details?.querySelectorAll('p, ul').forEach((element) => {
+                if (element !== cityElement && element !== descriptionElement && element !== priceElement &&
+                    !element.closest('.property-icons-row')) {
+                    element.hidden = true;
+                }
+            });
+
+            document.title = `${property.title} | Imobiliária`;
+            return;
+        }
+
+        if (titleElement) titleElement.textContent = overrides.title || titleElement.textContent;
+        if (summaryElement) summaryElement.textContent = overrides.city || summaryElement.textContent;
+        if (descriptionElement) descriptionElement.textContent = overrides.summary || descriptionElement.textContent;
+        if (priceElement && overrides.price !== undefined) priceElement.textContent = formatAdvertisedPrice(overrides.price);
+        if (Array.isArray(overrides.features)) {
+            overrides.features.forEach((feature, index) => {
+                if (featureElements[index]) featureElements[index].lastChild.textContent = ` ${feature}`;
+            });
+        }
+        if (Array.isArray(galleryImages)) {
+            const carouselInner = document.querySelector('#propertyGallery .carousel-inner');
+            if (carouselInner) {
+                carouselInner.innerHTML = galleryImages.map((image, index) => `
+                    <div class="carousel-item${index === 0 ? ' active' : ''}">
+                        <img src="${escapeHtml(image.src)}" class="property-gallery-main img-fluid w-100"
+                            alt="Imagem ${index + 1} do imóvel ${propertyId}">
+                    </div>
+                `).join('');
+            }
+        } else if (mainImageElement) {
+            const imageSource = galleryImages?.dataUrl || overrides.image;
+            if (imageSource) mainImageElement.src = imageSource;
+        }
+
+        const title = overrides.title || document.title;
+        document.title = title;
+    };
+
+    applyCurrentPageOverride();
 
     const renderPropertyPage = () => {
         if (!gridImoveis) {
             return;
         }
 
-        const pageCount = Math.ceil(loadedProperties.length / propertiesPerPage);
+        const filteredProperties = getFilteredProperties();
+        if (filteredProperties.length === 0) {
+            gridImoveis.innerHTML = '<div class="col-12"><p class="alert alert-info mb-0">Nenhum imóvel disponível no momento.</p></div>';
+            if (paginationImoveis) paginationImoveis.innerHTML = '';
+            return;
+        }
+
+        const pageCount = Math.ceil(filteredProperties.length / propertiesPerPage);
         currentPropertyPage = Math.min(currentPropertyPage, pageCount);
         const startIndex = (currentPropertyPage - 1) * propertiesPerPage;
-        const pageProperties = loadedProperties.slice(startIndex, startIndex + propertiesPerPage);
+        const pageProperties = filteredProperties.slice(startIndex, startIndex + propertiesPerPage);
 
         gridImoveis.innerHTML = pageProperties.map((property) => `
-            <div class="col-sm-6 col-md-6 col-lg-6 col-xl-4 col-xxl-3 card-deck fade-in">
+            <div class="col-sm-6 col-md-6 col-lg-6 col-xl-4 col-xxl-4 card-deck fade-in">
                 <a class="card h-100 shadow-sm border-0 position-relative text-decoration-none text-dark"
                     href="${property.url}">
-                    <div class="property-image-wrapper w-100 position-relative bg-light">
+                    <div class="property-image-wrapper w-100 position-relative bg-light${property.status && property.status !== 'Disponível' ? ' has-status' : ''}${property.featured ? ' has-promotion' : ''}">
                         <span class="badge bg-primary position-absolute top-0 start-0 m-3 p-2 fs-6 z-2">${escapeHtml(property.reference)}</span>
+                        ${(property.status && property.status !== 'Disponível') ? `<span class="property-status-ribbon">${escapeHtml(property.status)}</span>` : ''}
+                        ${property.featured ? '<span class="property-promotion-tag">Promoção</span>' : ''}
+                        <div class="property-operation-tags">
+                            ${(property.operations || ['Venda']).map((operation) => `<span class="property-operation-tag">${escapeHtml(operation)}</span>`).join('')}
+                        </div>
                         <img src="${escapeHtml(property.image)}" class="w-100 h-100"
                             alt="${escapeHtml(property.title)}" style="object-fit:cover;">
                         <div class="property-overlay-info">
                             <h5 class="card-title fw-bold text-dark mb-2">${escapeHtml(property.title)}</h5>
                             <p class="card-text text-secondary mb-3 small">${escapeHtml(property.summary)}</p>
-                            <h4 class="text-dark fw-bolder mb-0">${escapeHtml(property.price)}</h4>
+                            <h4 class="text-dark fw-bolder mb-0">${escapeHtml(formatAdvertisedPrice(property.price))}</h4>
                         </div>
                     </div>
                     <div class="card-footer bg-white p-3">
                         <div class="d-flex flex-wrap justify-content-around gap-2 text-center w-100 mb-3">
-                            ${property.features.map((feature) => `
+                            ${(property.features || []).map((feature) => `
                                 <span class="text-primary fw-medium small">${escapeHtml(feature)}</span>
                             `).join('')}
                         </div>
@@ -86,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const firstItem = startIndex + 1;
-        const lastItem = Math.min(startIndex + propertiesPerPage, loadedProperties.length);
+        const lastItem = Math.min(startIndex + propertiesPerPage, filteredProperties.length);
         const visiblePages = [];
         const windowStart = Math.max(1, currentPropertyPage - 2);
         const windowEnd = Math.min(pageCount, currentPropertyPage + 2);
@@ -122,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
         paginationImoveis.innerHTML = `
             <div class="d-flex flex-column align-items-center gap-2">
                 <p class="mb-0 text-muted small" aria-live="polite">
-                    Exibindo ${firstItem}–${lastItem} de ${loadedProperties.length} imóveis
+                    Exibindo ${firstItem}–${lastItem} de ${filteredProperties.length} imóveis
                 </p>
                 <ul class="pagination justify-content-center mb-0">
                     <li class="page-item${currentPropertyPage === 1 ? ' disabled' : ''}">
@@ -151,13 +368,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const page = Number(button.dataset.page);
-            const pageCount = Math.ceil(loadedProperties.length / propertiesPerPage);
+            const pageCount = Math.ceil(getFilteredProperties().length / propertiesPerPage);
             if (Number.isInteger(page) && page >= 1 && page <= pageCount) {
                 currentPropertyPage = page;
                 renderPropertyPage();
             }
         });
     }
+
+    typeFilters?.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-property-type]');
+        if (!button) return;
+
+        activePropertyType = button.dataset.propertyType;
+        typeFilters.querySelectorAll('button[data-property-type]').forEach((filterButton) => {
+            const isActive = filterButton === button;
+            filterButton.classList.toggle('active', isActive);
+            filterButton.setAttribute('aria-pressed', String(isActive));
+        });
+        currentPropertyPage = 1;
+        renderPropertyPage();
+    });
 
     const loadPropertyDetails = async () => {
         const properties = [];
@@ -189,17 +420,31 @@ document.addEventListener('DOMContentLoaded', () => {
                         throw new Error(`${detailUrl.pathname}: imagem principal do imóvel não encontrada`);
                     }
 
-                    return {
+                    const title = readText('.property-details h2');
+                    const summary = readText('.property-details > p.text-secondary.lh-lg');
+                    const city = readText('.property-details > p.text-secondary.fs-6');
+                    const rawProperty = {
                         id,
                         url: detailUrl.href,
-                        title: readText('.property-details h2'),
-                        summary: readText('.property-details > p.text-secondary.fs-6'),
+                        title,
+                        summary: readText('.property-details > p.text-secondary.lh-lg'),
+                        city,
                         price: readText('.property-details > p.text-dark.fw-bold'),
                         reference: readText('.property-icons-row .badge-ref'),
                         features: Array.from(page.querySelectorAll('.property-icons-row span:not(.badge-ref)'))
                             .map((feature) => feature.textContent.trim()),
-                        image: new URL(mainImage.getAttribute('src'), detailUrl).href
+                        image: new URL(mainImage.getAttribute('src'), detailUrl).href,
+                        galleryImages: Array.from(page.querySelectorAll('.property-gallery-main'))
+                            .map((image) => ({
+                                src: new URL(image.getAttribute('src'), detailUrl).href,
+                                filename: new URL(image.getAttribute('src'), detailUrl).pathname.split('/').pop()
+                            })),
+                        type: inferPropertyType(title),
+                        operations: inferOperations(`${title} ${city} ${summary}`),
+                        status: 'Disponível'
                     };
+
+                    return applyOverridesToProperty(rawProperty);
                 })
             );
             const availableProperties = propertyBatch.filter((property) => property !== null);
@@ -214,30 +459,54 @@ document.addEventListener('DOMContentLoaded', () => {
             nextPropertyId += propertiesPerPage;
         }
 
+        const createdProperties = readJson(createdPropertiesKey, []);
+        const savedImages = getPropertyImages();
+        properties.push(...createdProperties.map((property) => {
+            const galleryImages = savedImages[property.id] || [];
+            return applyOverridesToProperty({
+                ...property,
+                id: property.id,
+                url: `imovel.html?id=${property.id}`,
+                galleryImages,
+                image: galleryImages[0]?.src || '',
+                custom: true
+            });
+        }));
+
+        const deletedProperties = new Set(getDeletedProperties());
+        const visibleProperties = properties.filter((property) => !deletedProperties.has(property.id));
+
         if (carouselImoveis) {
-            carouselImoveis.innerHTML = properties.map((property, index) => `
+            carouselImoveis.innerHTML = visibleProperties.length > 0
+                ? visibleProperties.map((property, index) => `
                 <div class="carousel-item${index === 0 ? ' active' : ''}">
                     <a class="d-block position-relative text-decoration-none" href="${property.url}">
                         <img src="${escapeHtml(property.image)}" class="d-block w-100"
                             alt="${escapeHtml(property.title)}" style="object-fit:cover; height:420px;">
+                        ${property.status && property.status !== 'Disponível' ? `<span class="property-status-ribbon">${escapeHtml(property.status)}</span>` : ''}
+                        ${property.featured ? '<span class="property-promotion-tag">Promoção</span>' : ''}
+                        <div class="property-operation-tags carousel-operation-tags${property.featured ? ' has-promotion' : ''}">
+                            ${(property.operations || ['Venda']).map((operation) => `<span class="property-operation-tag">${escapeHtml(operation)}</span>`).join('')}
+                        </div>
                         <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.75));padding:24px 32px 20px;">
                             <span class="badge bg-primary mb-2">${escapeHtml(property.reference)}</span>
                             <h5 class="text-white fw-bold mb-1">${escapeHtml(property.title)}</h5>
                             <p class="text-white-50 mb-1 small">${escapeHtml(property.summary)}</p>
-                            <span class="text-white fw-bold">${escapeHtml(property.price)}</span>
+                            <span class="text-white fw-bold">${escapeHtml(formatAdvertisedPrice(property.price))}</span>
                         </div>
                     </a>
                 </div>
-            `).join('');
+            `).join('')
+                : '<p class="alert alert-info mb-0">Nenhum imóvel disponível no momento.</p>';
 
             const carousel = document.getElementById('imoveisCarousel');
-            if (carousel && window.bootstrap?.Carousel) {
+            if (visibleProperties.length > 0 && carousel && window.bootstrap?.Carousel) {
                 window.bootstrap.Carousel.getOrCreateInstance(carousel).cycle();
             }
         }
 
         if (gridImoveis) {
-            loadedProperties = properties;
+            loadedProperties = visibleProperties;
             renderPropertyPage();
         }
     };

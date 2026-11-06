@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo | Imobiliária</title>
+    <meta name="description" content="Painel administrativo para gerenciar os imóveis cadastrados no site.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-body-tertiary">
+    <div class="page-wrapper bg-white shadow-lg mx-auto">
+        <nav class="navbar navbar-expand-lg bg-white sticky-top shadow-sm border-bottom py-3">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand text-dark home-icon-brand" href="index.html" title="Página Inicial">
+                    <i class="fa fa-home fs-4"></i>
+                </a>
+                <button class="navbar-toggler border-0 focus-ring focus-ring-light" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainMenu">
+                    <ul class="navbar-nav mx-auto fw-bold fs-6 text-center mt-3 mt-lg-0 text-uppercase" style="letter-spacing: 0.5px;">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark mx-3 hover-primary transition" href="index.html">Início</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark mx-3 hover-primary transition" href="quem-somos.html">Quem Somos</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main class="dashboard-shell">
+            <section id="login-section" class="section bg-light border-bottom py-5">
+                <div class="container px-4">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <div class="panel-card">
+                                <div class="panel-card-header text-center">
+                                    <h1 class="h3 mb-0">Acesso ao painel</h1>
+                                </div>
+                                <form id="admin-login-form" class="property-form">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Usuário</label>
+                                        <input id="username" class="form-control" type="text" autocomplete="username" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Senha</label>
+                                        <input id="password" class="form-control" type="password" autocomplete="current-password" required>
+                                    </div>
+                                    <p id="login-error" class="text-danger small mb-3" hidden>Usuário ou senha inválidos.</p>
+                                    <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="dashboard-section" class="container px-4 py-4" hidden>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                    <div>
+                        <p class="text-uppercase fw-semibold text-primary mb-2">Painel Administrativo</p>
+                        <h1 class="display-6 fw-bold text-dark mb-0">Gestão de imóveis</h1>
+                    </div>
+                    <button id="logout-button" type="button" class="btn btn-outline-secondary">
+                        <i class="fa-solid fa-right-from-bracket me-2"></i> Sair
+                    </button>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6 col-xl-3">
+                        <div class="dashboard-stat">
+                            <span class="stat-label">Total</span>
+                            <strong id="stats-total" class="stat-value">0</strong>
+                            <small class="stat-meta">imóveis cadastrados</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="dashboard-stat accent-blue">
+                            <span class="stat-label">Disponíveis</span>
+                            <strong id="stats-available" class="stat-value">0</strong>
+                            <small class="stat-meta">ativos na vitrine</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="dashboard-stat accent-gold">
+                            <span class="stat-label">Em andamento</span>
+                            <strong id="stats-pending" class="stat-value">0</strong>
+                            <small class="stat-meta">negócios em análise</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="dashboard-stat accent-green">
+                            <span class="stat-label">Destaques</span>
+                            <strong id="stats-featured" class="stat-value">0</strong>
+                            <small class="stat-meta">selecionados no site</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="property-editor-modal" tabindex="-1" aria-labelledby="form-title" aria-hidden="true">
+                    <div class="modal-dialog modal-xl modal-fullscreen-lg-down modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content property-editor-modal-content">
+                            <div class="modal-header panel-card-header">
+                                <h2 id="form-title" class="h4 mb-0">Editar imóvel</h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body property-editor-modal-body">
+                                <form id="property-form" class="property-form">
+                                <div class="mb-3">
+                                    <label for="property-title" class="form-label">Título</label>
+                                    <input id="property-title" class="form-control" type="text" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="property-reference" class="form-label">Código do imóvel</label>
+                                    <input id="property-reference" class="form-control" type="text" readonly aria-describedby="property-reference-help">
+                                    <small id="property-reference-help" class="form-text text-muted">Código fixo do imóvel; não pode ser alterado.</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="property-city" class="form-label">Cidade</label>
+                                    <input id="property-city" class="form-control" type="text" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="property-type" class="form-label">Tipo do imóvel</label>
+                                    <select id="property-type" class="form-select">
+                                        <option value="Apartamento">Apartamento</option>
+                                        <option value="Sala Comercial">Sala Comercial</option>
+                                        <option value="Barracão">Barracão</option>
+                                        <option value="Casa">Casa</option>
+                                        <option value="Outros">Outros</option>
+                                    </select>
+                                </div>
+                                <fieldset class="mb-3">
+                                    <legend class="form-label fs-6">Finalidade</legend>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <div class="form-check">
+                                            <input id="operation-sale" class="form-check-input" type="checkbox" name="property-operation" value="Venda">
+                                            <label class="form-check-label" for="operation-sale">Venda</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input id="operation-rent" class="form-check-input" type="checkbox" name="property-operation" value="Aluguel">
+                                            <label class="form-check-label" for="operation-rent">Aluguel</label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="row g-3">
+                                    <div class="col-sm-6">
+                                        <label for="property-area" class="form-label">Área</label>
+                                        <input id="property-area" class="form-control" type="number" min="0" step="any" placeholder="Ex.: 77">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="property-bedrooms" class="form-label">Quartos</label>
+                                        <input id="property-bedrooms" class="form-control" type="text" placeholder="Ex.: 3 quartos">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="property-bathrooms" class="form-label">Banheiros</label>
+                                        <input id="property-bathrooms" class="form-control" type="text" placeholder="Ex.: 2 banheiros">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="property-parking" class="form-label">Vagas</label>
+                                        <input id="property-parking" class="form-control" type="text" placeholder="Ex.: 1 vaga">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="property-price" class="form-label">Preço</label>
+                                    <input id="property-price" class="form-control" type="number" min="0" step="1000" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="property-status" class="form-label">Status</label>
+                                    <select id="property-status" class="form-select">
+                                        <option value="Disponível">Disponível</option>
+                                        <option value="Reservado">Reservado</option>
+                                        <option value="Em análise">Em análise</option>
+                                        <option value="Vendido">Vendido</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                <label for="property-image" class="form-label">Adicionar imagens à galeria</label>
+                                <input id="property-image" class="form-control" type="file" accept="image/*" multiple>
+                                <small id="property-image-name" class="text-muted d-block mt-2">Selecione uma ou mais imagens.</small>
+                                </div>
+                                <div class="mb-3">
+                                <label class="form-label">Imagens cadastradas</label>
+                                <div id="image-gallery" class="admin-image-gallery"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="property-summary" class="form-label">Resumo</label>
+                                    <textarea id="property-summary" class="form-control" rows="3"></textarea>
+                                </div>
+                                <div class="form-check form-switch mb-4">
+                                    <input id="property-featured" class="form-check-input" type="checkbox">
+                                    <label class="form-check-label" for="property-featured">Marcar como promoção e destacar na página inicial</label>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary flex-fill">Salvar</button>
+                                    <button id="cancel-edit" type="button" class="btn btn-outline-secondary" hidden>Cancelar</button>
+                                </div>
+                                <button id="delete-property" type="button" class="btn btn-outline-danger w-100 mt-3" hidden>
+                                    <i class="fa-regular fa-trash-can me-2" aria-hidden="true"></i>Excluir imóvel
+                                </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-card">
+                    <div class="panel-card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <h2 class="h4 mb-0">Imóveis cadastrados</h2>
+                        <button id="new-property-button" type="button" class="btn btn-primary">
+                            <i class="fa-solid fa-plus me-2" aria-hidden="true"></i>Cadastrar novo imóvel
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 property-table">
+                            <thead>
+                                <tr>
+                                    <th>Imóvel</th>
+                                    <th>Cidade</th>
+                                    <th>Preço</th>
+                                    <th>Status</th>
+                                    <th>Destaque</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="property-table-body"></tbody>
+                        </table>
+                    </div>
+                    <div id="empty-state" class="empty-state" hidden>
+                        <p class="mb-0">Nenhum imóvel cadastrado no painel ainda.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script src="painel.js"></script>
+</body>
+
+</html>
