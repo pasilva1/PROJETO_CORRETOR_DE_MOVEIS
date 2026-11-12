@@ -83,11 +83,15 @@ document.addEventListener('DOMContentLoaded', () => {
             summary: overrides.summary || property.summary,
             reference: property.reference,
             city: overrides.city || property.city,
-            price: overrides.price ?? property.price,
             features: overrides.features || property.features,
             type: overrides.type || property.type || inferPropertyType(property.title),
             operations: overrides.operations || property.operations || ['Venda'],
-            featured: Boolean(overrides.featured ?? property.featured)
+            featured: Boolean(overrides.featured ?? property.featured),
+            mustSee: Boolean(overrides.mustSee ?? property.mustSee),
+            saleHighlight: Boolean(overrides.saleHighlight ?? property.saleHighlight),
+            rentHighlight: Boolean(overrides.rentHighlight ?? property.rentHighlight),
+            launch: Boolean(overrides.launch ?? property.launch),
+            price: overrides.launch ? null : (overrides.price ?? property.price)
         };
     };
     let activePropertyType = 'Todos';
@@ -125,6 +129,20 @@ document.addEventListener('DOMContentLoaded', () => {
             currency: 'BRL'
         }).format(price)}`;
     };
+    const formatPropertyFeature = (feature, index) => {
+        const formats = [
+            { pattern: /^(\d+)\s*(?:quartos?|dormitórios?)(.*)$/i, singular: 'Quarto', plural: 'Quartos' },
+            { pattern: /^(\d+)\s*(?:banheiros?|banh\.?)(.*)$/i, singular: 'Banheiro', plural: 'Banheiros' },
+            { pattern: /^(\d+)\s*vagas?(.*)$/i, singular: 'Vaga', plural: 'Vagas' }
+        ];
+        const text = String(feature ?? '').trim();
+        const format = formats.find(({ pattern }) => pattern.test(text)) || formats[index - 1];
+        const match = format?.pattern.exec(text) || text.match(/^(\d+)$/);
+        if (!format || !match) return text;
+
+        const label = match[1] === '1' ? format.singular : format.plural;
+        return `${match[1]} ${label}${match[2] || ''}`;
+    };
     const applyCurrentPageOverride = () => {
         const propertyIdMatch = window.location.pathname.match(/imovel-(\d+)\.html/i);
         const queryPropertyId = new URLSearchParams(window.location.search).get('id');
@@ -153,6 +171,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const mainImageElement = document.querySelector('.property-gallery-main');
         const galleryImages = getPropertyImages()[propertyId];
         const featureElements = document.querySelectorAll('.property-icons-row span:not(.badge-ref)');
+        const updateGalleryPromotionTag = (isFeatured) => {
+            const gallery = document.getElementById('propertyGallery');
+            if (!gallery) return;
+
+            let promotionTag = document.getElementById('property-gallery-promotion-tag');
+            if (!isFeatured) {
+                promotionTag?.remove();
+                return;
+            }
+
+            if (!promotionTag) {
+                promotionTag = document.createElement('div');
+                promotionTag.id = 'property-gallery-promotion-tag';
+                promotionTag.className = 'property-promotion-tag';
+                promotionTag.textContent = 'Promoção';
+                gallery.insertAdjacentElement('afterend', promotionTag);
+            }
+        };
+        updateGalleryPromotionTag(Boolean(overrides?.featured ?? createdProperty?.featured));
 
         if (createdProperty) {
             const property = { ...createdProperty, ...overrides };
@@ -192,12 +229,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (titleElement) titleElement.textContent = property.title;
             if (cityElement) cityElement.textContent = property.city;
             if (descriptionElement) descriptionElement.textContent = property.summary;
-            if (priceElement) priceElement.textContent = formatAdvertisedPrice(property.price);
+            if (priceElement) {
+                priceElement.hidden = Boolean(property.launch);
+                if (!property.launch) priceElement.textContent = formatAdvertisedPrice(property.price);
+            }
             if (referenceElement) referenceElement.textContent = `Cod.: ${property.reference}`;
             if (iconsRow) {
                 const icons = ['fa-ruler-combined', 'fa-bed', 'fa-shower', 'fa-car'];
                 iconsRow.innerHTML = (property.features || []).map((feature, index) => `
-                    <span><i class="fa ${icons[index] || 'fa-circle-info'}" aria-hidden="true"></i> ${escapeHtml(feature)}</span>
+                <span><i class="fa ${icons[index] || 'fa-circle-info'}" aria-hidden="true"></i> ${escapeHtml(formatPropertyFeature(feature, index))}</span>
                 `).join('') + `<span class="badge-ref ms-auto mt-2 mt-sm-0">Cod.: ${escapeHtml(property.reference)}</span>`;
             }
             details?.querySelectorAll('p, ul').forEach((element) => {
@@ -214,7 +254,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (titleElement) titleElement.textContent = overrides.title || titleElement.textContent;
         if (summaryElement) summaryElement.textContent = overrides.city || summaryElement.textContent;
         if (descriptionElement) descriptionElement.textContent = overrides.summary || descriptionElement.textContent;
-        if (priceElement && overrides.price !== undefined) priceElement.textContent = formatAdvertisedPrice(overrides.price);
+        if (priceElement) {
+            priceElement.hidden = Boolean(overrides.launch);
+            if (!overrides.launch && overrides.price !== undefined) {
+                priceElement.textContent = formatAdvertisedPrice(overrides.price);
+            }
+        }
         if (Array.isArray(overrides.features)) {
             overrides.features.forEach((feature, index) => {
                 if (featureElements[index]) featureElements[index].lastChild.textContent = ` ${feature}`;
@@ -265,22 +310,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="property-image-wrapper w-100 position-relative bg-light${property.status && property.status !== 'Disponível' ? ' has-status' : ''}${property.featured ? ' has-promotion' : ''}">
                         <span class="badge bg-primary position-absolute top-0 start-0 m-3 p-2 fs-6 z-2">${escapeHtml(property.reference)}</span>
                         ${(property.status && property.status !== 'Disponível') ? `<span class="property-status-ribbon">${escapeHtml(property.status)}</span>` : ''}
-                        ${property.featured ? '<span class="property-promotion-tag">Promoção</span>' : ''}
                         <div class="property-operation-tags">
                             ${(property.operations || ['Venda']).map((operation) => `<span class="property-operation-tag">${escapeHtml(operation)}</span>`).join('')}
                         </div>
                         <img src="${escapeHtml(property.image)}" class="w-100 h-100"
                             alt="${escapeHtml(property.title)}" style="object-fit:cover;">
+                        ${property.featured ? '<span class="property-promotion-tag property-promotion-tag--overlay">Promoção</span>' : ''}
                         <div class="property-overlay-info">
                             <h5 class="card-title fw-bold text-dark mb-2">${escapeHtml(property.title)}</h5>
                             <p class="card-text text-secondary mb-3 small">${escapeHtml(property.summary)}</p>
-                            <h4 class="text-dark fw-bolder mb-0">${escapeHtml(formatAdvertisedPrice(property.price))}</h4>
+                            ${property.launch ? '<span class="badge text-bg-info">Lançamento</span>' : `<h4 class="text-dark fw-bolder mb-0">${escapeHtml(formatAdvertisedPrice(property.price))}</h4>`}
                         </div>
                     </div>
                     <div class="card-footer bg-white p-3">
                         <div class="d-flex flex-wrap justify-content-around gap-2 text-center w-100 mb-3">
-                            ${(property.features || []).map((feature) => `
-                                <span class="text-primary fw-medium small">${escapeHtml(feature)}</span>
+                            ${(property.features || []).map((feature, index) => `
+                                <span class="text-primary fw-medium small">${escapeHtml(formatPropertyFeature(feature, index))}</span>
                             `).join('')}
                         </div>
                         <div class="w-100 text-center pt-2 border-top">
@@ -290,7 +335,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </a>
             </div>
         `).join('');
-
         gridImoveis.querySelectorAll('.fade-in').forEach((element) => observer.observe(element));
 
         if (!paginationImoveis) {
@@ -358,6 +402,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 </ul>
             </div>
         `;
+    };
+
+    const renderCuratedSection = (sectionId, gridId, properties) => {
+        const section = document.getElementById(sectionId);
+        const grid = document.getElementById(gridId);
+        if (!section || !grid) return;
+
+        section.hidden = properties.length === 0;
+        grid.innerHTML = properties.map((property) => `
+            <div class="col-sm-6 col-lg-4">
+                <a class="card h-100 shadow-sm border-0 text-decoration-none text-dark" href="${escapeHtml(property.url)}">
+                    <div class="property-image-wrapper bg-light${property.status && property.status !== 'Disponível' ? ' has-status' : ''}">
+                        ${property.launch ? '<span class="badge text-bg-info position-absolute top-0 end-0 m-3">Lançamento</span>' : ''}
+                        <img src="${escapeHtml(property.image)}" class="w-100 h-100"
+                            alt="${escapeHtml(property.title)}" style="object-fit:cover;">
+                        ${property.featured ? '<span class="property-promotion-tag property-promotion-tag--overlay">Promoção</span>' : ''}
+                    </div>
+                    <div class="card-body">
+                        <h3 class="h5 card-title fw-bold">${escapeHtml(property.title)}</h3>
+                        <p class="card-text text-secondary small">${escapeHtml(property.city)}</p>
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+                            ${(property.features || []).map((feature, index) => `
+                                <span class="text-primary fw-medium small">${escapeHtml(formatPropertyFeature(feature, index))}</span>
+                            `).join('')}
+                        </div>
+                        <p class="card-text mb-0">${property.launch ? 'Lançamento' : escapeHtml(formatAdvertisedPrice(property.price))}</p>
+                    </div>
+                </a>
+            </div>
+        `).join('');
     };
 
     if (paginationImoveis) {
@@ -476,32 +550,61 @@ document.addEventListener('DOMContentLoaded', () => {
         const deletedProperties = new Set(getDeletedProperties());
         const visibleProperties = properties.filter((property) => !deletedProperties.has(property.id));
 
+        renderCuratedSection(
+            'must-see-section',
+            'must-see-properties',
+            visibleProperties.filter((property) => property.mustSee)
+        );
+        renderCuratedSection(
+            'sale-highlights-section',
+            'sale-highlight-properties',
+            visibleProperties.filter((property) =>
+                property.saleHighlight && (property.operations || []).includes('Venda')
+            )
+        );
+        renderCuratedSection(
+            'rent-highlights-section',
+            'rent-highlight-properties',
+            visibleProperties.filter((property) =>
+                property.rentHighlight && (property.operations || []).includes('Aluguel')
+            )
+        );
+
+        const carouselProperties = visibleProperties.filter((property) => property.featured);
         if (carouselImoveis) {
-            carouselImoveis.innerHTML = visibleProperties.length > 0
-                ? visibleProperties.map((property, index) => `
+            carouselImoveis.innerHTML = carouselProperties.length > 0
+                ? carouselProperties.map((property, index) => `
                 <div class="carousel-item${index === 0 ? ' active' : ''}">
-                    <a class="d-block position-relative text-decoration-none" href="${property.url}">
-                        <img src="${escapeHtml(property.image)}" class="d-block w-100"
-                            alt="${escapeHtml(property.title)}" style="object-fit:cover; height:420px;">
-                        ${property.status && property.status !== 'Disponível' ? `<span class="property-status-ribbon">${escapeHtml(property.status)}</span>` : ''}
+                    <a class="d-block text-decoration-none" href="${property.url}">
+                        <div class="property-image-wrapper property-carousel-image bg-light${property.status && property.status !== 'Disponível' ? ' has-status' : ''}">
+                            <img src="${escapeHtml(property.image)}" class="d-block w-100 h-100"
+                                alt="${escapeHtml(property.title)}" style="object-fit:cover;">
+                            ${property.status && property.status !== 'Disponível' ? `<span class="property-status-ribbon">${escapeHtml(property.status)}</span>` : ''}
+                            ${property.launch ? '<span class="badge text-bg-info position-absolute bottom-0 end-0 m-3">Lançamento</span>' : ''}
+                            <div class="property-operation-tags carousel-operation-tags${property.featured ? ' has-promotion' : ''}">
+                                ${(property.operations || ['Venda']).map((operation) => `<span class="property-operation-tag">${escapeHtml(operation)}</span>`).join('')}
+                            </div>
+                            <div class="property-carousel-caption">
+                                <span class="badge bg-primary mb-2">${escapeHtml(property.reference)}</span>
+                                <h5 class="text-white fw-bold mb-1">${escapeHtml(property.title)}</h5>
+                                <p class="text-white-50 mb-1 small">${escapeHtml(property.summary)}</p>
+                                ${property.launch ? '' : `<span class="text-white fw-bold">${escapeHtml(formatAdvertisedPrice(property.price))}</span>`}
+                            </div>
+                        </div>
                         ${property.featured ? '<span class="property-promotion-tag">Promoção</span>' : ''}
-                        <div class="property-operation-tags carousel-operation-tags${property.featured ? ' has-promotion' : ''}">
-                            ${(property.operations || ['Venda']).map((operation) => `<span class="property-operation-tag">${escapeHtml(operation)}</span>`).join('')}
-                        </div>
-                        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.75));padding:24px 32px 20px;">
-                            <span class="badge bg-primary mb-2">${escapeHtml(property.reference)}</span>
-                            <h5 class="text-white fw-bold mb-1">${escapeHtml(property.title)}</h5>
-                            <p class="text-white-50 mb-1 small">${escapeHtml(property.summary)}</p>
-                            <span class="text-white fw-bold">${escapeHtml(formatAdvertisedPrice(property.price))}</span>
-                        </div>
                     </a>
                 </div>
             `).join('')
-                : '<p class="alert alert-info mb-0">Nenhum imóvel disponível no momento.</p>';
+                : '<p class="alert alert-info mb-0">Nenhum imóvel em promoção para exibir nos destaques.</p>';
 
             const carousel = document.getElementById('imoveisCarousel');
-            if (visibleProperties.length > 0 && carousel && window.bootstrap?.Carousel) {
-                window.bootstrap.Carousel.getOrCreateInstance(carousel).cycle();
+            if (carousel && window.bootstrap?.Carousel) {
+                const carouselInstance = window.bootstrap.Carousel.getOrCreateInstance(carousel);
+                if (carouselProperties.length > 0) {
+                    carouselInstance.cycle();
+                } else {
+                    carouselInstance.pause();
+                }
             }
         }
 
@@ -510,6 +613,17 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPropertyPage();
         }
     };
+
+    window.addEventListener('storage', (event) => {
+        if ((!carouselImoveis && !gridImoveis) ||
+            ![propertyOverridesKey, propertyImagesKey, deletedPropertiesKey, createdPropertiesKey].includes(event.key)) {
+            return;
+        }
+
+        loadPropertyDetails().catch((error) => {
+            console.error('Não foi possível atualizar os imóveis após uma alteração no painel.', error);
+        });
+    });
 
     // =====================================================
     // 4. ANO ATUAL (Footer)

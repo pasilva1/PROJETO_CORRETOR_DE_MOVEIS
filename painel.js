@@ -35,6 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const number = Number(sanitized);
         return Number.isFinite(number) ? number : 0;
     };
+    const getFeatureCount = (value) => String(value ?? '').match(/^\s*(\d+)/)?.[1] || '';
+    const formatFeatureLabel = (value, singular, plural) =>
+        `${value} ${value === '1' ? singular : plural}`;
+    const getFeatureByLabel = (features, labelPattern, fallbackIndex) =>
+        features.find((feature) => labelPattern.test(String(feature))) ?? features[fallbackIndex] ?? '';
 
     const state = {
         properties: [],
@@ -63,6 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const imagePreview = document.getElementById('image-preview');
     const imageInput = document.getElementById('property-image');
     const propertyImageName = document.getElementById('property-image-name');
+    const propertyPriceField = document.getElementById('property-price');
+    const propertyLaunchField = document.getElementById('property-launch');
 
     const summaryCards = {
         total: document.getElementById('stats-total'),
@@ -118,12 +125,13 @@ document.addEventListener('DOMContentLoaded', () => {
             ...overrides,
             galleryImages,
             reference: property.reference,
+            url: property.custom ? `imovel.html?id=${property.id}` : `imoveis/imovel-${property.id}.html`,
             image: Array.isArray(savedGallery)
                 ? (galleryImages[0]?.src || '')
                 : (galleryImages[0]?.src || overrides.image || property.image),
             title: overrides.title || property.title,
             city: overrides.city || property.city,
-            price: overrides.price ?? property.price,
+            price: overrides.launch ? null : (overrides.price ?? property.price),
             summary: overrides.summary || property.summary
         };
     };
@@ -179,7 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 image,
                 galleryImages,
                 status: 'Disponível',
-                featured: false
+                featured: false,
+                mustSee: false,
+                saleHighlight: false,
+                rentHighlight: false,
+                launch: false
             });
 
             currentId += 1;
@@ -242,15 +254,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 <tr>
                     <td>
                         <div class="admin-listing d-flex align-items-center gap-3">
-                            <img src="${item.image || `assets/imoveis/imovel-${item.id}.webp`}" alt="${item.title}" class="admin-listing-thumb">
+                            <a href="${item.url}" aria-label="Abrir imóvel: ${item.title}">
+                                <img src="${item.image || `assets/imoveis/imovel-${item.id}.webp`}" alt="${item.title}" class="admin-listing-thumb">
+                            </a>
                             <div>
-                                <div class="fw-semibold">${item.title}</div>
+                                <a class="fw-semibold text-decoration-none" href="${item.url}">${item.title}</a>
                                 <small class="text-muted">Cod.: ${item.reference}</small>
                             </div>
                         </div>
                     </td>
                     <td>${item.city}</td>
-                    <td>${formatCurrency(item.price)}</td>
+                    <td>${item.launch ? 'Lançamento' : formatCurrency(item.price)}</td>
                     <td><span class="badge rounded-pill ${statusClass}">${item.status}</span></td>
                     <td>${item.featured ? '<span class="text-success fw-semibold">Sim</span>' : 'Não'}</td>
                     <td>
@@ -273,14 +287,29 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('property-type').value = property.type || 'Outros';
         document.getElementById('operation-sale').checked = (property.operations || ['Venda']).includes('Venda');
         document.getElementById('operation-rent').checked = (property.operations || []).includes('Aluguel');
-        const area = String(property.features?.[0] || '').match(/\d+(?:[.,]\d+)?/)?.[0] || '';
+        const features = property.features || [];
+        const areaFeature = features.find((feature) => /m(?:²|2)/i.test(String(feature))) ?? '';
+        const area = String(areaFeature).match(/\d+(?:[.,]\d+)?/)?.[0] || '';
         document.getElementById('property-area').value = area.replace(',', '.');
-        document.getElementById('property-bedrooms').value = property.features?.[1] || '';
-        document.getElementById('property-bathrooms').value = property.features?.[2] || '';
-        document.getElementById('property-parking').value = property.features?.[3] || '';
+        document.getElementById('property-bedrooms').value = getFeatureCount(
+            getFeatureByLabel(features, /quartos?|dormitórios?/i, 1)
+        );
+        document.getElementById('property-bathrooms').value = getFeatureCount(
+            getFeatureByLabel(features, /banheiros?|banh\.?/i, 2)
+        );
+        document.getElementById('property-parking').value = getFeatureCount(
+            getFeatureByLabel(features, /vagas?/i, 3)
+        );
         document.getElementById('property-price').value = property.price || 0;
         document.getElementById('property-status').value = property.status || 'Disponível';
         document.getElementById('property-featured').checked = Boolean(property.featured);
+        document.getElementById('property-must-see').checked = Boolean(property.mustSee);
+        document.getElementById('property-sale-highlight').checked = Boolean(property.saleHighlight);
+        document.getElementById('property-rent-highlight').checked = Boolean(property.rentHighlight);
+        propertyLaunchField.checked = Boolean(property.launch);
+        propertyPriceField.disabled = propertyLaunchField.checked;
+        propertyPriceField.required = !propertyLaunchField.checked;
+        propertyPriceField.value = propertyLaunchField.checked ? '' : property.price ?? 0;
         document.getElementById('property-summary').value = property.summary || '';
 
         state.editingId = property.id;
@@ -349,6 +378,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (deletePropertyButton) deletePropertyButton.hidden = true;
         const featuredField = document.getElementById('property-featured');
         if (featuredField) featuredField.checked = false;
+        document.getElementById('property-must-see').checked = false;
+        document.getElementById('property-sale-highlight').checked = false;
+        document.getElementById('property-rent-highlight').checked = false;
+        propertyLaunchField.checked = false;
+        propertyPriceField.disabled = false;
+        propertyPriceField.required = true;
     };
 
     const persistPropertyUpdate = () => {
@@ -361,13 +396,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const operations = Array.from(document.querySelectorAll('input[name="property-operation"]:checked'))
             .map((input) => input.value);
         const area = document.getElementById('property-area').value.trim();
-        const features = [
-            area ? `${area} m²` : '',
-            document.getElementById('property-bedrooms').value.trim(),
-            document.getElementById('property-bathrooms').value.trim(),
-            document.getElementById('property-parking').value.trim()
-        ].filter(Boolean);
-        const price = Number(document.getElementById('property-price').value || 0);
+        const features = [];
+        if (area) features.push(`${area} m²`);
+        [
+            ['property-bedrooms', 'Quartos'],
+            ['property-bathrooms', 'Banheiros'],
+            ['property-parking', 'Vagas']
+        ].forEach(([fieldId, label]) => {
+            const value = document.getElementById(fieldId).value.trim();
+            if (!value) return;
+
+            const labels = {
+                Quartos: ['Quarto', 'Quartos'],
+                Banheiros: ['Banheiro', 'Banheiros'],
+                Vagas: ['Vaga', 'Vagas']
+            }[label];
+            features.push(formatFeatureLabel(value, ...labels));
+        });
+        const launch = propertyLaunchField.checked;
+        const price = launch ? null : Number(propertyPriceField.value || 0);
         const status = document.getElementById('property-status').value;
         const featured = document.getElementById('property-featured').checked;
         const summary = document.getElementById('property-summary').value.trim();
@@ -396,6 +443,10 @@ document.addEventListener('DOMContentLoaded', () => {
             price,
             status,
             featured,
+            mustSee: document.getElementById('property-must-see').checked,
+            saleHighlight: document.getElementById('property-sale-highlight').checked,
+            rentHighlight: document.getElementById('property-rent-highlight').checked,
+            launch,
             summary: summary || 'Imóvel em destaque na carteira da imobiliária.'
         };
 
@@ -495,6 +546,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (property) populateForm(property);
         });
     }
+
+    propertyLaunchField?.addEventListener('change', () => {
+        propertyPriceField.disabled = propertyLaunchField.checked;
+        propertyPriceField.required = !propertyLaunchField.checked;
+        if (propertyLaunchField.checked) propertyPriceField.value = '';
+    });
 
     newPropertyButton?.addEventListener('click', () => {
         resetForm();

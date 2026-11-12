@@ -14,7 +14,7 @@
     <!-- Bootstrap para usar as classes col-sm-6 col-md-6 etc -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=7">
 </head>
 
 <body class="bg-body-tertiary">
@@ -97,7 +97,7 @@
             <!-- ================================================
                  CARROSSEL DE IMÓVEIS DESTAQUES
             ================================================ -->
-            <section class="section pt-4 pb-3 bg-white">
+            <section class="section pt-5 pb-3 bg-white">
                 <div class="container position-relative px-4">
                     <h2 class="display-6 fw-bold text-center text-dark mb-4 fade-in">Imóveis Destaques !</h2>
                     <div id="imoveisCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -117,6 +117,27 @@
                             <span class="visually-hidden">Próximo</span>
                         </button>
                     </div>
+                </div>
+            </section>
+
+            <section id="must-see-section" class="section py-4 bg-white" hidden>
+                <div class="container px-4">
+                    <h2 class="display-6 fw-bold text-center text-dark mb-4">Imóveis imperdíveis</h2>
+                    <div id="must-see-properties" class="row g-4"></div>
+                </div>
+            </section>
+
+            <section id="sale-highlights-section" class="section py-4 bg-light" hidden>
+                <div class="container px-4">
+                    <h2 class="display-6 fw-bold text-center text-dark mb-4">Destaques de venda</h2>
+                    <div id="sale-highlight-properties" class="row g-4"></div>
+                </div>
+            </section>
+
+            <section id="rent-highlights-section" class="section py-4 bg-white" hidden>
+                <div class="container px-4">
+                    <h2 class="display-6 fw-bold text-center text-dark mb-4">Destaques de locação</h2>
+                    <div id="rent-highlight-properties" class="row g-4"></div>
                 </div>
             </section>
 
@@ -276,7 +297,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
+    <script src="script.js?v=6"></script>
 </body>
 
 </html>

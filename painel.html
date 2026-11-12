@@ -158,15 +158,15 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <label for="property-bedrooms" class="form-label">Quartos</label>
-                                        <input id="property-bedrooms" class="form-control" type="text" placeholder="Ex.: 3 quartos">
+                                        <input id="property-bedrooms" class="form-control" type="number" min="0" step="1" placeholder="Ex.: 3">
                                     </div>
                                     <div class="col-sm-6">
                                         <label for="property-bathrooms" class="form-label">Banheiros</label>
-                                        <input id="property-bathrooms" class="form-control" type="text" placeholder="Ex.: 2 banheiros">
+                                        <input id="property-bathrooms" class="form-control" type="number" min="0" step="1" placeholder="Ex.: 2">
                                     </div>
                                     <div class="col-sm-6">
                                         <label for="property-parking" class="form-label">Vagas</label>
-                                        <input id="property-parking" class="form-control" type="text" placeholder="Ex.: 1 vaga">
+                                        <input id="property-parking" class="form-control" type="number" min="0" step="1" placeholder="Ex.: 1">
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -197,7 +197,26 @@
                                 </div>
                                 <div class="form-check form-switch mb-4">
                                     <input id="property-featured" class="form-check-input" type="checkbox">
-                                    <label class="form-check-label" for="property-featured">Marcar como promoção e destacar na página inicial</label>
+                                    <label class="form-check-label" for="property-featured">Marcar como promoção e exibir no carrossel de imóveis</label>
+                                </div>
+                                <fieldset class="mb-4">
+                                    <legend class="form-label fs-6">Exibição na página inicial</legend>
+                                    <div class="form-check">
+                                        <input id="property-must-see" class="form-check-input" type="checkbox">
+                                        <label class="form-check-label" for="property-must-see">Exibir em Imóveis imperdíveis</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="property-sale-highlight" class="form-check-input" type="checkbox">
+                                        <label class="form-check-label" for="property-sale-highlight">Exibir em Destaques de venda</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="property-rent-highlight" class="form-check-input" type="checkbox">
+                                        <label class="form-check-label" for="property-rent-highlight">Exibir em Destaques de locação</label>
+                                    </div>
+                                </fieldset>
+                                <div class="form-check form-switch mb-4">
+                                    <input id="property-launch" class="form-check-input" type="checkbox">
+                                    <label class="form-check-label" for="property-launch">Marcar como Lançamento (sem preço)</label>
                                 </div>
                                 <div class="d-flex gap-2">
                                     <button type="submit" class="btn btn-primary flex-fill">Salvar</button>
@@ -243,8 +262,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
-    <script src="painel.js"></script>
+    <script src="script.js?v=3"></script>
+    <script src="painel.js?v=3"></script>
 </body>
 
 </html>
